@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/danilihsanov/CLionProjects/untitled3/Enums.h
+
+/Users/danilihsanov/CLionProjects/untitled3/LexAnalyser.h
+map
+-
+iostream
+-
+string
+-
+fstream
+-
+vector
+-
+Token.h
+/Users/danilihsanov/CLionProjects/untitled3/Token.h
+
+/Users/danilihsanov/CLionProjects/untitled3/SyntaxAnalyser.h
+vector
+-
+iostream
+-
+Token.h
+/Users/danilihsanov/CLionProjects/untitled3/Token.h
+
+/Users/danilihsanov/CLionProjects/untitled3/Token.h
+Enums.h
+/Users/danilihsanov/CLionProjects/untitled3/Enums.h
+string
+-
+iostream
+-
+
+/Users/danilihsanov/CLionProjects/untitled3/main.cpp
+LexAnalyser.h
+/Users/danilihsanov/CLionProjects/untitled3/LexAnalyser.h
+SyntaxAnalyser.h
+/Users/danilihsanov/CLionProjects/untitled3/SyntaxAnalyser.h
+
