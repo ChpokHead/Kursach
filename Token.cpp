@@ -1,99 +1,99 @@
 #include "Token.h"
 
-// Р’С‹РІРѕРґ С‚РёРїРѕРІ С‚РѕРєРµРЅРѕРІ
+// Вывод типов токенов
 void Token::printToken()
 {
     switch (_type)
     {
         case IDENT:
-            cout << "РўРёРї: IDENT" << endl;
+            cout << "Тип: IDENT" << endl;
             break;
         case DEC:
-            cout << "РўРёРї: DEC" << endl;
+            cout << "Тип: DEC" << endl;
             break;
         case STR:
-            cout << "РўРёРї: STR" << endl;
+            cout << "Тип: STR" << endl;
             break;
         case COMMA:
-            cout << "РўРёРї: COMMA" << endl;
+            cout << "Тип: COMMA" << endl;
             break;
         case PLUS:
-            cout << "РўРёРї: PLUS" << endl;
+            cout << "Тип: PLUS" << endl;
             break;
         case MINUS:
-            cout << "РўРёРї: MINUS" << endl;
+            cout << "Тип: MINUS" << endl;
             break;
         case MUL:
-            cout << "РўРёРї: MUL" << endl;
+            cout << "Тип: MUL" << endl;
             break;
         case DIV:
-            cout << "РўРёРї: DIV" << endl;
+            cout << "Тип: DIV" << endl;
             break;
         case LBR:
-            cout << "РўРёРї: LBR" << endl;
+            cout << "Тип: LBR" << endl;
             break;
         case RBR:
-            cout << "РўРёРї: RBR" << endl;
+            cout << "Тип: RBR" << endl;
             break;
         case LFBR:
-            cout << "РўРёРї: LFBR" << endl;
+            cout << "Тип: LFBR" << endl;
             break;
         case RFBR:
-            cout << "РўРёРї: RFBR" << endl;
+            cout << "Тип: RFBR" << endl;
             break;
         case COL:
-            cout << "РўРёРї: COL" << endl;
+            cout << "Тип: COL" << endl;
             break;
         case SCOL:
-            cout << "РўРёРї: SCOL" << endl;
+            cout << "Тип: SCOL" << endl;
             break;
         case MTHAN:
-            cout << "РўРёРї: MTHAN" << endl;
+            cout << "Тип: MTHAN" << endl;
             break;
         case LTHAN:
-            cout << "РўРёРї: LTHAN" << endl;
+            cout << "Тип: LTHAN" << endl;
             break;
         case EQUAL:
-            cout << "РўРёРї: EQUAL" << endl;
+            cout << "Тип: EQUAL" << endl;
             break;
         case DOT:
-            cout << "РўРёРї: DOT" << endl;
+            cout << "Тип: DOT" << endl;
             break;
         case EXC:
-            cout << "РўРёРї: EXC" << endl;
+            cout << "Тип: EXC" << endl;
             break;
         case PACKAGE:
-            cout << "РўРёРї: PACKAGE" << endl;
+            cout << "Тип: PACKAGE" << endl;
             break;
         case BSLASH:
-            cout << "РўРёРї: BSLASH" << endl;
+            cout << "Тип: BSLASH" << endl;
             break;
         case FUNC:
-            cout << "РўРёРї: FUNC" << endl;
+            cout << "Тип: FUNC" << endl;
             break;
         case VAR:
-            cout << "РўРёРї: VAR" << endl;
+            cout << "Тип: VAR" << endl;
             break;
         case FLOAT64:
-            cout << "РўРёРї: FLOAT64" << endl;
+            cout << "Тип: FLOAT64" << endl;
             break;
         case INT:
-            cout << "РўРёРї: INT" << endl;
+            cout << "Тип: INT" << endl;
             break;
         case ASS:
-            cout << "РўРёРї: ASS" << endl;
+            cout << "Тип: ASS" << endl;
             break;
         case RETURN:
-            cout << "РўРёРї: RETURN" << endl;
+            cout << "Тип: RETURN" << endl;
             break;
         case WHILE:
-            cout << "РўРёРї: WHILE" << endl;
+            cout << "Тип: WHILE" << endl;
             break;
         case IMPORT:
-            cout << "РўРёРї: IMPORT" << endl;
+            cout << "Тип: IMPORT" << endl;
             break;
         case IF:
-            cout << "РўРёРї: IF" << endl;
+            cout << "Тип: IF" << endl;
             break;
     }
 }

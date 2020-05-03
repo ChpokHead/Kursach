@@ -1,20 +1,84 @@
 #include "SyntaxAnalyser.h"
 
-SyntaxAnalyser::SyntaxAnalyser(vector<Token> *tokens): it(0) {
+SyntaxAnalyser::SyntaxAnalyser(vector<Token> *tokens): it(0)
+{
      tokenList = tokens;
+     optimization();
 }
 
-// Р“Р»Р°РІРЅС‹Р№ РјРµС‚РѕРґ СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР·
+// Оптимизация - удаление лишних BSLASH в векторе
+void SyntaxAnalyser::optimization()
+{
+    bool flag = false;
+
+    for (auto it = tokenList->begin(); it != tokenList->end();)
+    {
+        if (it->getType() == BSLASH) {
+            flag = true;
+        }
+
+        it++;
+
+        while (flag) 
+        {
+            if (it->getType() == BSLASH) 
+                it = tokenList->erase(it);
+            else 
+                flag = false;        
+        }
+    }
+}
+
+// Главный метод с которого начинается синтаксический анализ
 void SyntaxAnalyser :: analyse() {
-    if(on_P())
-        cout << "РЎРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР· РїСЂРѕР№РґРµРЅ СѓСЃРїРµС€РЅРѕ!" << endl;
+    if (on_P())
+        cout << "\nСинтаксический анализ пройден успешно!" << endl;
     else
-        cout << "РћС€РёР±РєР° СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРѕРіРѕ Р°РЅР°Р»РёР·Р°!" << endl;
+        throw error.syntaxError("");
 }
 
-// РџСЂРѕРІРµСЂСЏРµРј РЅР° РіР»Р°РІРЅС‹Р№ РїР°РєРµС‚ РІ РЅР°С‡Р°Р»Рµ РїСЂРѕРіСЂР°РјРјС‹
 bool SyntaxAnalyser::on_P() {
-    if(tokenList->at(it).getType() != PACKAGE)
+    if (!on_Package())
         return false;
+    if (!on_Import())
+        return false;
+
     return true;
 }
+
+// Проверяем на package main в начале программы 
+bool SyntaxAnalyser::on_Package() {
+    if (tokenList->at(it).getType() != PACKAGE) it++;
+ 
+
+    if (tokenList->at(it++).getType() != PACKAGE)
+        return false;
+
+    if (tokenList->at(it++).getType() != IDENT)
+        return false;
+
+    if (tokenList->at(it++).getType() != BSLASH)
+        return false;
+
+    return true;
+}
+
+// Проверяем на import()
+bool SyntaxAnalyser::on_Import() {
+    if (tokenList->at(it++).getType() != IMPORT)
+        return false;
+    if (tokenList->at(it++).getType() != LBR)
+        return false;
+    
+    while (tokenList->at(it).getType() == STR || tokenList->at(it).getType() == BSLASH) {
+        it++;
+    }
+
+    if (tokenList->at(it++).getType() != RBR)
+        return false;
+
+    return true;
+}
+
+// IDENT, DEC, STR, COMMA, PLUS, MINUS, MUL, DIV, LBR, RBR, LFBR, RFBR, COL, SCOL, MTHAN, 
+// LTHAN, EQUAL, DOT, EXC, PACKAGE, BSLASH, FUNC, VAR, FLOAT64, INT, ASS, RETURN, WHILE, IMPORT, IF

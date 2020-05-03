@@ -8,19 +8,9 @@
 
 /Users/danilihsanov/CLionProjects/untitled3/Enums.h
 
-/Users/danilihsanov/CLionProjects/untitled3/LexAnalyser.h
-map
--
-iostream
--
-string
--
-fstream
--
-vector
--
-Token.h
-/Users/danilihsanov/CLionProjects/untitled3/Token.h
+/Users/danilihsanov/CLionProjects/untitled3/SyntaxAnalyser.cpp
+SyntaxAnalyser.h
+/Users/danilihsanov/CLionProjects/untitled3/SyntaxAnalyser.h
 
 /Users/danilihsanov/CLionProjects/untitled3/SyntaxAnalyser.h
 vector
@@ -37,10 +27,4 @@ string
 -
 iostream
 -
-
-/Users/danilihsanov/CLionProjects/untitled3/main.cpp
-LexAnalyser.h
-/Users/danilihsanov/CLionProjects/untitled3/LexAnalyser.h
-SyntaxAnalyser.h
-/Users/danilihsanov/CLionProjects/untitled3/SyntaxAnalyser.h
 

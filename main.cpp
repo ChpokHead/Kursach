@@ -1,6 +1,6 @@
-//Users/danilihsanov/CLionProjects/untitled3/in.txt
 #include "LexAnalyser.h"
 #include "SyntaxAnalyser.h"
+#include "ErrorHandler.h"
 
 int main(void)
 {
@@ -10,17 +10,20 @@ int main(void)
     
     try
     {
-        LexAnalyser lex("/Users/danilihsanov/CLionProjects/untitled3/in.txt");
-        SyntaxAnalyser syn(lex.getTokenList());
+        LexAnalyser lex("in.txt");
 
         while (lex.getToken(token))
         {
-            cout << "Ð›ÐµÐºÑÐµÐ¼Ð¼Ð°: '" << token.getValue() << "' --- "; token.printToken();
+            cout << "Ëåêñåììà: '" << token.getValue() << "' --- "; 
+            token.printToken();
         }
+
+        SyntaxAnalyser syn(lex.getTokenList());
         syn.analyse();
     }
-    catch (LexError err)
+    catch (string str)
     {
+        cout << str << endl;
         exit(1);
     }
 

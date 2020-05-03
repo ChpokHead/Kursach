@@ -26,7 +26,7 @@ string trim(string& str) // Принимает на вход строку
 LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Конструктор принимает на вход имя файла с входной цепочкой
 {
     _file.open(fname, ifstream::in); // Пытаемся открыть файл в поток
-    if (!_file.is_open()) throw LexError("Ошибка открытия файла"); //Если неудача, возбуждаем исключительную ситуацию
+    if (!_file.is_open()) throw error.fileError(("Ошибка открытия файла")); //Если неудача, возбуждаем исключительную ситуацию
     _file.unsetf(ios::skipws);
 
     // Заполнение таблицы переходов КА
@@ -161,10 +161,6 @@ LexAnalyser::~LexAnalyser()
     _file.close(); //Деструктор закрывает файловый поток
 }
 
-vector<Token>* LexAnalyser::getTokenList() {
-    return &tokenList;
-}
-
 bool LexAnalyser::getToken(Token& token)
 {
     Statement current = S0; // Начальное состояние - S0
@@ -185,7 +181,11 @@ bool LexAnalyser::getToken(Token& token)
             isStrCon = (isStrCon == true) ? false : true; 
 
         it = M.find(Input(current, symbol)); // Пытаемся найти ячейку таблицы, соответствующую ключу Текущее Состояние current, Входной Символ symbol
-        if (it == M.end()) throw LexError("Некорректный символ"); // Если такой ячейки нет, возбуждаем исключительную ситуацию
+        if (it == M.end()) // Если такой ячейки нет, возбуждаем исключительную ситуацию
+            if (isStrCon) 
+                throw error.lexError(("Незакрытые кавычки"));
+            else 
+                throw error.lexError(("Некорректный символ")); 
         res = it->second; // Получаем пару (Новое Состояние & Выходной сигнал)
 
         // Если это не буква, не цифра, не строка или не конец файла
@@ -306,12 +306,12 @@ bool LexAnalyser::getToken(Token& token)
                     type = BSLASH; // \n
                     break;
                 default:
-                    throw LexError("Лексическая ошибка");
+                    throw  error.lexError(("Лексическая ошибка"));
             }
 
             // Проверка осталась ли кавычка без пары
             if (isStrCon) {
-                throw LexError("Незакрытые кавычки");
+                throw error.lexError(("Незакрытые кавычки"));
             }
 
             // Формируем лексему
@@ -323,7 +323,7 @@ bool LexAnalyser::getToken(Token& token)
             else // Иначе оставляем как есть (т.к. обрезали раньше)
                 token.setValue(value);
 
-            tokenList.push_back(token); // Добавляем токен в список лексем
+            tokenList.push_back(token); // Добавляем токен в вектор лексем
 
             // Если лексема не разделитель, то возвращаем захваченный нами лишний символ
             if (!_file.eof() && ((type == IDENT || type == DEC) || (type == 19 || (type >= 21 && type <= 29) && type != 25)))
