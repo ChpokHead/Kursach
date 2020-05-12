@@ -8,12 +8,12 @@ string trim(string& str) // Принимает на вход строку
 {
     bool strConst = false;
     string::const_iterator it = str.begin(); // Итератор it1 указывает на начало строки
-    
+
     // Удаляет все отступы до строковой константы и после нее, если лексема - это строковая константа
     // иначе удаляет все отступы, которые видит
     while (it != str.end()){
-        if (*it == '\"') 
-            strConst = (strConst == true) ? false : true; 
+        if (*it == '\"')
+            strConst = (strConst == true) ? false : true;
         if((*it == ' '|| *it == '\t' || *it == '\n') && !strConst)
             str.erase(it);
         else
@@ -23,7 +23,7 @@ string trim(string& str) // Принимает на вход строку
     return str; // Создаем строку без пробелов, табуляций и переносов строки
 }
 
-LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Конструктор принимает на вход имя файла с входной цепочкой
+LexAnalyser::LexAnalyser(const char* fname) : isLast(false), isStrCon(false) //Конструктор принимает на вход имя файла с входной цепочкой
 {
     _file.open(fname, ifstream::in); // Пытаемся открыть файл в поток
     if (!_file.is_open()) throw error.fileError(("Ошибка открытия файла")); //Если неудача, возбуждаем исключительную ситуацию
@@ -60,6 +60,9 @@ LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Ко
     M.insert(Item(Input(S2, '\t'), Result(S6, O1)));
     M.insert(Item(Input(S2, '{'), Result(S6, O1)));
     M.insert(Item(Input(S2, '}'), Result(S6, O1)));
+    M.insert(Item(Input(S2, '|'), Result(S6, O1)));
+    M.insert(Item(Input(S2, '['), Result(S6, O1)));
+    M.insert(Item(Input(S2, ']'), Result(S6, O1)));
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 
     /*–––––––––––––––––––––––––––––––– РАЗДЕЛИТЕЛИ ДЛЯ ЧИСЕЛ –––––––––––––––––––––––––––––––*/
@@ -77,11 +80,15 @@ LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Ко
     M.insert(Item(Input(S5, '\t'), Result(S6, O2)));
     M.insert(Item(Input(S5, '{'), Result(S6, O2)));
     M.insert(Item(Input(S5, '}'), Result(S6, O2)));
-
+    M.insert(Item(Input(S5, '|'), Result(S6, O2)));
     M.insert(Item(Input(S4, '\n'), Result(S6, O2)));
     M.insert(Item(Input(S4, '\t'), Result(S6, O2)));
     M.insert(Item(Input(S4, '{'), Result(S6, O2)));
     M.insert(Item(Input(S4, '}'), Result(S6, O2)));
+    M.insert(Item(Input(S4, '|'), Result(S6, O2)));
+    M.insert(Item(Input(S4, '['), Result(S6, O2)));
+    M.insert(Item(Input(S4, ']'), Result(S6, O2)));
+
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 
     /*––––––––––––––––––––––––––––––- СТРОКОВАЯ КОНСТАНТА -–––––––––––––––––––––––––––––––––*/
@@ -114,6 +121,11 @@ LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Ко
     M.insert(Item(Input(S1, '='), Result(S1, O3)));
     M.insert(Item(Input(S1, '.'), Result(S1, O3)));
     M.insert(Item(Input(S1, '!'), Result(S1, O3)));
+    M.insert(Item(Input(S1, '&'), Result(S1, O3)));
+    M.insert(Item(Input(S1, '|'), Result(S1, O3)));
+    M.insert(Item(Input(S1, '['), Result(S1, O3)));
+    M.insert(Item(Input(S1, ']'), Result(S1, O3)));
+
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 
     /*–––––––––––––––––––––––––––––– ОПЕРАТОРЫ РАЗДЕЛИТЕЛИ –––––––––––––––––––––––––––––––––*/
@@ -133,6 +145,11 @@ LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Ко
     M.insert(Item(Input(S0, '='), Result(S3, O17)));
     M.insert(Item(Input(S0, '.'), Result(S3, O18)));
     M.insert(Item(Input(S0, '!'), Result(S3, O19)));
+    M.insert(Item(Input(S0, '&'), Result(S3, O31)));
+    M.insert(Item(Input(S0, '|'), Result(S3, O32)));
+    M.insert(Item(Input(S0, '['), Result(S3, O41)));
+    M.insert(Item(Input(S0, ']'), Result(S3, O42)));
+
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 
     M.insert(Item(Input(S0, '\t'), Result(S0, O0))); // Tab после очередной лексемы
@@ -149,11 +166,21 @@ LexAnalyser::LexAnalyser(const char* fname): isLast(false), isStrCon(false) //Ко
     Keywords.insert({ "int", Output(O25) });
     Keywords.insert({ ":=", Output(O26) });
     Keywords.insert({ "return", Output(O27) });
-    Keywords.insert({ "while", Output(O28) });
+    Keywords.insert({ "for", Output(O28) });
     Keywords.insert({ "import", Output(O29) });
     Keywords.insert({ "if", Output(O30) });
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    Keywords.insert({ "&&", Output(O31) });
+    Keywords.insert({ "||", Output(O32) });
+    Keywords.insert({ "else", Output(O33) });
+    Keywords.insert({ "<=", Output(O34) });
+    Keywords.insert({ ">=", Output(O35) });
+    Keywords.insert({ "==", Output(O36) });
+    Keywords.insert({ "!=", Output(O37) });
+    Keywords.insert({ "fmt.Println", Output(O38) });
+    Keywords.insert({ "math.Sqrt", Output(O39) });
+    Keywords.insert({ "main", Output(O40) });
 
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 }
 
 LexAnalyser::~LexAnalyser()
@@ -176,27 +203,28 @@ bool LexAnalyser::getToken(Token& token)
         _file.get(symbol); // Получаем очередной символ
         if (_file.peek() == EOF) isLast = true;
 
-        // Если кавычка остается без пары, то будет true 
+        // Если кавычка остается без пары, то будет true
         if (symbol == '\"')
-            isStrCon = (isStrCon == true) ? false : true; 
+            isStrCon = !isStrCon;
 
         it = M.find(Input(current, symbol)); // Пытаемся найти ячейку таблицы, соответствующую ключу Текущее Состояние current, Входной Символ symbol
         if (it == M.end()) // Если такой ячейки нет, возбуждаем исключительную ситуацию
-            if (isStrCon) 
+            if (isStrCon)
                 throw error.lexError(("Незакрытые кавычки"));
-            else 
-                throw error.lexError(("Некорректный символ")); 
+            else
+                throw error.lexError(("Некорректный символ"));
+
         res = it->second; // Получаем пару (Новое Состояние & Выходной сигнал)
 
         // Если это не буква, не цифра, не строка или не конец файла
-        if ((res.first != S2 && res.first != S4 && res.first != S5 && res.first != S1 && res.first != S0 )|| isLast) 
+        if ((res.first != S2 && res.first != S4 && res.first != S5 && res.first != S1 && res.first != S0 )|| isLast)
         {
             //Текущее состояние финальное, либо текущий символ кавычка или перенос строки
-            if (res.first != S6 || symbol == '\"' || symbol == '\n') 
+            if (res.first != S6 || symbol == '\"' || symbol == '\n')
                 value += symbol;
 
             // Проверка на :=
-            if (res.second == O13)
+            if (symbol == ':')
             {
                 _file.get(symbol);
                 if (symbol == '=') {
@@ -204,12 +232,96 @@ bool LexAnalyser::getToken(Token& token)
                     res.second = O1;
                 }
                 else  _file.seekg(-1, ios::cur);
+                if (_file.peek() == EOF) isLast = true;
+            }
+
+            // Проверка на >=
+            if (symbol == '>')
+            {
+                _file.get(symbol);
+                if (symbol == '=') {
+                    value += symbol;
+                    res.second = O1;
+                }
+                else  _file.seekg(-1, ios::cur);
+                if (_file.peek() == EOF) isLast = true;
+            }
+
+            // Проверка на <=
+            if (symbol == '<')
+            {
+                _file.get(symbol);
+                if (symbol == '=') {
+                    value += symbol;
+                    res.second = O1;
+                }
+                else  _file.seekg(-1, ios::cur);
+                if (_file.peek() == EOF) isLast = true;
+            }
+
+            // Проверка на ==
+            if (symbol == '=')
+            {
+                _file.get(symbol);
+                if (symbol == '=') {
+                    value += symbol;
+                    res.second = O1;
+                }
+                else  _file.seekg(-1, ios::cur);
+                if (_file.peek() == EOF) isLast = true;
+            }
+
+            // Проверка на !=
+            if (symbol == '!')
+            {
+                _file.get(symbol);
+                if (symbol == '=') {
+                    value += symbol;
+                    res.second = O1;
+                }
+                else  _file.seekg(-1, ios::cur);
+                if (_file.peek() == EOF) isLast = true;
+            }
+
+            // Проверка на &&
+            if (symbol == '&')
+            {
+                _file.get(symbol);
+                if (symbol == '&') {
+                    value += symbol;
+                    res.second = O1;
+                }
+                    // Т.к. не может быть одиночного & вне строковой константы
+                else  throw error.lexError(("Некорректный символ"));
+                if (_file.peek() == EOF) isLast = true;
+            }
+
+            // Проверка на ||
+            if (symbol == '|')
+            {
+                _file.get(symbol);
+                if (symbol == '|') {
+                    value += symbol;
+                    res.second = O1;
+                }
+                    // Т.к. не может быть одиночного | вне строковой константы
+                else  throw error.lexError(("Некорректный символ"));
+                if (_file.peek() == EOF) isLast = true;
             }
 
             switch (res.second) //Выходной сигнал
             {
+                // Если \n или \t, то цикл можно не продолжать
+                case O0:
+                    continue;
                 case O1:
                     value = trim(value);
+                    // Проверка, необходимая для считывания fmt.Println и math.Sqrt в виде одной лексемы
+                    if(symbol == '.' && (value.compare("fmt") == 0 || value.compare("math") == 0)) {
+                        res.first = S2;
+                        value += symbol;
+                        continue;
+                    }
                     kIt = Keywords.find(value); // Поиск ячейки в таблице ключевых слов
                     if (kIt == Keywords.end()) // Если не нашел, то это обычный идентификатор
                         type = IDENT;
@@ -218,7 +330,7 @@ bool LexAnalyser::getToken(Token& token)
                         {
                             case O21:
                                 type = PACKAGE; // "package"
-                                break; 
+                                break;
                             case O22:
                                 type = FUNC; // "func"
                                 break;
@@ -238,13 +350,43 @@ bool LexAnalyser::getToken(Token& token)
                                 type = RETURN; // "return"
                                 break;
                             case O28:
-                                type = WHILE; // "while"
+                                type = FOR; // "while"
                                 break;
                             case O29:
                                 type = IMPORT; // "import"
                                 break;
                             case O30:
                                 type = IF; // "if"
+                                break;
+                            case O31:
+                                type = AND; // &&
+                                break;
+                            case O32:
+                                type = OR; // ||
+                                break;
+                            case O33:
+                                type = ELSE; // "else"
+                                break;
+                            case O34:
+                                type = LEQUAL; // <=
+                                break;
+                            case O35:
+                                type = MEQUAL; // >=
+                                break;
+                            case O36:
+                                type = DEQUAL; // ==
+                                break;
+                            case O37:
+                                type = EXEQUAL; // !=
+                                break;
+                            case O38:
+                                type = FPRINTLN; // fmt.Println
+                                break;
+                            case O39:
+                                type = FSQRT; // math.Sqrt
+                                break;
+                            case O40:
+                                type = MAIN; // main
                                 break;
                         }
                     break;
@@ -305,6 +447,12 @@ bool LexAnalyser::getToken(Token& token)
                 case O20:
                     type = BSLASH; // \n
                     break;
+                case O41:
+                    type = LSQBR; // [
+                    break;
+                case O42:
+                    type = RSQBR; // ]
+                    break;
                 default:
                     throw  error.lexError(("Лексическая ошибка"));
             }
@@ -318,7 +466,7 @@ bool LexAnalyser::getToken(Token& token)
             token.setType(type);
 
             // Если лексема не ключевое ключевое слово, то обрезаем \n \t _ в этой строке
-            if (token.getType() < 21 && token.getType() != 0)
+            if (token.getType() > 39 || token.getType() < 21 && token.getType() != 0)
                 token.setValue(trim(value));
             else // Иначе оставляем как есть (т.к. обрезали раньше)
                 token.setValue(value);
@@ -326,7 +474,8 @@ bool LexAnalyser::getToken(Token& token)
             tokenList.push_back(token); // Добавляем токен в вектор лексем
 
             // Если лексема не разделитель, то возвращаем захваченный нами лишний символ
-            if (!_file.eof() && ((type == IDENT || type == DEC) || (type == 19 || (type >= 21 && type <= 29) && type != 25)))
+            // Условие такое длинное, потому что типы стоят не по порядку, они добавлялись в процессе написания программы
+            if (!_file.eof() && ((type == IDENT || type == DEC) || (type == 19 || (type >= 21 && type <= 39) && (type != 25 && type != 30 && type != 31 && (type <= 32 || type >= 37)))))
                 _file.seekg(-1, ios::cur); // Возвращаем захваченный нами лишний символ
             return true;
         }

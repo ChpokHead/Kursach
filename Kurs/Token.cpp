@@ -86,14 +86,50 @@ void Token::printToken()
         case RETURN:
             cout << "Òèï: RETURN" << endl;
             break;
-        case WHILE:
-            cout << "Òèï: WHILE" << endl;
+        case FOR:
+            cout << "Òèï: FOR" << endl;
             break;
         case IMPORT:
             cout << "Òèï: IMPORT" << endl;
             break;
         case IF:
             cout << "Òèï: IF" << endl;
+            break;
+        case AND:
+            cout << "Òèï: AND" << endl;
+            break;
+        case OR:
+            cout << "Òèï: OR" << endl;
+            break;
+        case ELSE:
+            cout << "Òèï: ELSE" << endl;
+            break;
+        case LEQUAL:
+            cout << "Òèï: LEQUAL" << endl;
+            break;
+        case MEQUAL:
+            cout << "Òèï: MEQUAL" << endl;
+            break;
+        case DEQUAL:
+            cout << "Òèï: DEQUAL" << endl;
+            break;
+        case EXEQUAL:
+            cout << "Òèï: EXEQUAL" << endl;
+            break;
+        case FPRINTLN:
+            cout << "Òèï: FPRINTLN" << endl;
+            break;
+        case FSQRT:
+            cout << "Òèï: FSQRT" << endl;
+            break;
+        case MAIN:
+            cout << "Òèï: MAIN" << endl;
+            break;
+        case LSQBR:
+            cout << "Òèï: LSQBR" << endl;
+            break;
+        case RSQBR:
+            cout << "Òèï: RSQBR" << endl;
             break;
     }
 }

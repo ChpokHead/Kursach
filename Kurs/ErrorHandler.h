@@ -9,13 +9,13 @@ public:
     ErrorHandler() {};
     inline string lexError(std::string str)
     {
-        std::cout << "Îøèáêà ëåêñè÷åñêîãî àíàëèçàòîðà: ";
+        std::cout << "\nÎØÈÁÊÀ ËÅÊÑÈ×ÅÑÊÎÃÎ ÀÍÀËÈÇÀÒÎÐÀ: ";
         return str;
     }
 
     inline string syntaxError(std::string str)
     {
-        std::cout << "\nÎøèáêà ñèíòàêñè÷åñêîãî àíàëèçàòîðà.";
+        std::cout << "\nÎØÈÁÊÀ ÑÈÍÒÀÊÑÈ×ÅÑÊÎÃÎ ÀÍÀËÈÇÀÒÎÐÀ. ";
         return str;
     }
 

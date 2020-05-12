@@ -1,0 +1,21 @@
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func main() {
+	var a float64 = 2 
+	var b float64 = 5
+	var e float64 = -3
+	var cdt, x1, x2 float64
+	
+	cdt = b * b - 4 * a * e
+	
+	x1 = (-b + math.Sqrt(cdt)) / (2 * a)
+	x2 = (-b - math.Sqrt(cdt)) / (2 * a)
+	
+	fmt.Println("x1 = ", x1)
+	fmt.Println("x2 = ", x2) 
+}

@@ -2,7 +2,7 @@
 #include "SyntaxAnalyser.h"
 #include "ErrorHandler.h"
 
-int main(void)
+int main (int argc, char* argv[])
 {
     setlocale(LC_ALL, "Russian");
 
