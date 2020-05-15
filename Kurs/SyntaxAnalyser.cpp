@@ -1,11 +1,10 @@
 #include "SyntaxAnalyser.h"
 #define outOfBounds  if (++it >= sizeList) return false
 
-SyntaxAnalyser::SyntaxAnalyser(vector<Token> *tokens): it(0), saveIt(0)
+SyntaxAnalyser::SyntaxAnalyser(vector<Token> &tokens): it(0), saveIt(0), tokenList(tokens)
 {
-    tokenList = tokens;
     optimization();
-    sizeList = tokenList->size();
+    sizeList = tokenList.size();
 }
 
 void SyntaxAnalyser::rollBack(int saveIt)
@@ -17,38 +16,38 @@ void SyntaxAnalyser::rollBack(int saveIt)
 void SyntaxAnalyser::optimization()
 {
     bool flag = false;
-    auto it = tokenList->begin();
+    auto it = tokenList.begin();
 
     while (it->getType() == BSLASH || it->getType() == SCOL)
     {
-        it = tokenList->erase(it);
+        it = tokenList.erase(it);
         // ≈сли вдруг программа состоит только из \n и ;
-        if (it == tokenList->end()) throw error.syntaxError("ѕрограмма не имеет операторов.");
+        if (it == tokenList.end()) throw error.syntaxError("ѕрограмма не имеет операторов.");
     }
 
-    while (it != tokenList->end())
+    while (it != tokenList.end())
     {
         // ”даление \n и ; после открывающихс€ скобок
         if (it->getType() == LBR || it->getType() == LFBR)
         {
-            if (++it == tokenList->end()) break;
+            if (++it == tokenList.end()) break;
             while (it->getType() == BSLASH || it->getType() == SCOL)
             {
-                it = tokenList->erase(it);
-                if (it == tokenList->end()) break;
+                it = tokenList.erase(it);
+                if (it == tokenList.end()) break;
             }
         }
             // ”даление \n и ; до закрывающихс€ скобок
         else if (it->getType() == RBR || it->getType() == RFBR)
         {
-            if (it == tokenList->begin())
+            if (it == tokenList.begin())
                 break;
             else
                 it--;
             while (it->getType() == BSLASH || it->getType() == SCOL)
             {
-                it = tokenList->erase(it);
-                if (it == tokenList->begin())
+                it = tokenList.erase(it);
+                if (it == tokenList.begin())
                     break;
                 else
                     it--;
@@ -58,25 +57,25 @@ void SyntaxAnalyser::optimization()
                 it++;
         }
 
-        if (it == tokenList->end())
+        if (it == tokenList.end())
             break;
         else
             it++;
     }
 
-    it = tokenList->begin();
+    it = tokenList.begin();
 
-    while (it != tokenList->end()) {
+    while (it != tokenList.end()) {
         if (it->getType() == BSLASH || it->getType() == SCOL)
             flag = true;
 
-        if (++it == tokenList->end())
+        if (++it == tokenList.end())
             break;
 
-        while (flag && it != tokenList->end())
+        while (flag && it != tokenList.end())
         {
             if (it->getType() == BSLASH || it->getType() == SCOL)
-                it = tokenList->erase(it);
+                it = tokenList.erase(it);
             else
                 flag = false;
         }
@@ -111,11 +110,11 @@ bool SyntaxAnalyser::on_P() {
 
 // PAC => "package" => I => NL
 bool SyntaxAnalyser::on_PAC() {
-    if (tokenList->at(it).getType() != PACKAGE)
+    if (tokenList.at(it).getType() != PACKAGE)
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != MAIN)
+    if (tokenList.at(it).getType() != MAIN)
         return false;
 
     if (!on_NL())
@@ -127,7 +126,7 @@ bool SyntaxAnalyser::on_PAC() {
 // IMP -> "import" => [NL] => "(" => [STR => {NL => STR}] => ")" => NL
 bool SyntaxAnalyser::on_IMP() {
     outOfBounds;
-    if (tokenList->at(it).getType() != IMPORT)
+    if (tokenList.at(it).getType() != IMPORT)
         return false;
 
     saveIt = it;
@@ -135,7 +134,7 @@ bool SyntaxAnalyser::on_IMP() {
         rollBack(saveIt);
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR)
+    if (tokenList.at(it).getType() != LBR)
         return false;
 
     saveIt = it;
@@ -156,7 +155,7 @@ bool SyntaxAnalyser::on_IMP() {
         }
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR)
+    if (tokenList.at(it).getType() != RBR)
         return false;
 
     if (!on_NL())
@@ -198,23 +197,23 @@ bool SyntaxAnalyser::on_MAIN()
 {
     int res;
     outOfBounds;
-    if (tokenList->at(it).getType() != FUNC)
+    if (tokenList.at(it).getType() != FUNC)
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != MAIN)
+    if (tokenList.at(it).getType() != MAIN)
         throw error.syntaxError("ќшибка в объ€влении main.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR)
+    if (tokenList.at(it).getType() != LBR)
         throw error.syntaxError("ќшибка в объ€влении main.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR)
+    if (tokenList.at(it).getType() != RBR)
         throw error.syntaxError("ќшибка в объ€влении main.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LFBR)
+    if (tokenList.at(it).getType() != LFBR)
         throw error.syntaxError("ќшибка в объ€влении main.");
 
     saveIt = it;
@@ -225,7 +224,7 @@ bool SyntaxAnalyser::on_MAIN()
         throw error.syntaxError("ќшибка в теле main.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RFBR)
+    if (tokenList.at(it).getType() != RFBR)
         throw error.syntaxError("ќшибка в теле main.");
 
     return true;
@@ -236,16 +235,16 @@ bool SyntaxAnalyser::on_FUN()
 {
     int res;
     outOfBounds;
-    if (tokenList->at(it).getType() != FUNC)
+    if (tokenList.at(it).getType() != FUNC)
         return false;
 
-    if (!on_I() && tokenList->at(it).getType() != MAIN)
+    if (!on_I() && tokenList.at(it).getType() != MAIN)
         throw error.syntaxError("ќшибка в объ€влении функции.");
-    else if(tokenList->at(it).getType() == MAIN)
+    else if(tokenList.at(it).getType() == MAIN)
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR)
+    if (tokenList.at(it).getType() != LBR)
         throw error.syntaxError("ќшибка в объ€влении функции.");
 
     saveIt = it;
@@ -259,7 +258,7 @@ bool SyntaxAnalyser::on_FUN()
         while (1)
         {
             outOfBounds;
-            if (tokenList->at(it).getType() == COMMA) {
+            if (tokenList.at(it).getType() == COMMA) {
                 if (!on_I())
                     throw error.syntaxError("ќшибка в объ€влении функции.");
 
@@ -277,14 +276,14 @@ bool SyntaxAnalyser::on_FUN()
     }
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR)
+    if (tokenList.at(it).getType() != RBR)
         throw error.syntaxError("ќшибка в объ€влении функции.");
 
     if (!on_T())
         throw error.syntaxError("ќшибка в объ€влении функции.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LFBR)
+    if (tokenList.at(it).getType() != LFBR)
         throw error.syntaxError("ќшибка в объ€влении функции.");
 
     saveIt = it;
@@ -295,7 +294,7 @@ bool SyntaxAnalyser::on_FUN()
         throw error.syntaxError("ќшибка в теле функции.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RFBR)
+    if (tokenList.at(it).getType() != RFBR)
         throw error.syntaxError("ќшибка в теле функции.");
 
     return true;
@@ -309,7 +308,7 @@ bool SyntaxAnalyser::on_ST()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == STR)
+    if (tokenList.at(it).getType() == STR)
         return true;
 
     return false;
@@ -320,7 +319,7 @@ bool SyntaxAnalyser::on_N()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == DEC)
+    if (tokenList.at(it).getType() == DEC)
         return true;
 
     return false;
@@ -331,7 +330,7 @@ bool SyntaxAnalyser::on_I()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == IDENT)
+    if (tokenList.at(it).getType() == IDENT)
         return true;
 
     return false;
@@ -342,7 +341,7 @@ bool SyntaxAnalyser::on_T()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == INT || tokenList->at(it).getType() == FLOAT64)
+    if (tokenList.at(it).getType() == INT || tokenList.at(it).getType() == FLOAT64)
         return true;
 
     return false;
@@ -353,7 +352,7 @@ bool SyntaxAnalyser::on_Z()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == MINUS || tokenList->at(it).getType() == PLUS)
+    if (tokenList.at(it).getType() == MINUS || tokenList.at(it).getType() == PLUS)
         return true;
 
     return false;
@@ -364,7 +363,7 @@ bool SyntaxAnalyser::on_M()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == DIV || tokenList->at(it).getType() == MUL)
+    if (tokenList.at(it).getType() == DIV || tokenList.at(it).getType() == MUL)
         return true;
 
     return false;
@@ -375,7 +374,7 @@ bool SyntaxAnalyser::on_NL()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == BSLASH || tokenList->at(it).getType() == SCOL)
+    if (tokenList.at(it).getType() == BSLASH || tokenList.at(it).getType() == SCOL)
         return true;
 
     return false;
@@ -386,22 +385,22 @@ bool SyntaxAnalyser::on_LO()
 {
     outOfBounds;
 
-    if (tokenList->at(it).getType() == DEQUAL)
+    if (tokenList.at(it).getType() == DEQUAL)
         return true;
 
-    if (tokenList->at(it).getType() == MTHAN)
+    if (tokenList.at(it).getType() == MTHAN)
         return true;
 
-    if (tokenList->at(it).getType() == LTHAN)
+    if (tokenList.at(it).getType() == LTHAN)
         return true;
 
-    if (tokenList->at(it).getType() == MEQUAL)
+    if (tokenList.at(it).getType() == MEQUAL)
         return true;
 
-    if(tokenList->at(it).getType() == LEQUAL)
+    if(tokenList.at(it).getType() == LEQUAL)
         return true;
 
-    if(tokenList->at(it).getType() == EXEQUAL)
+    if(tokenList.at(it).getType() == EXEQUAL)
         return true;
 
     return  false;
@@ -411,10 +410,10 @@ bool SyntaxAnalyser::on_LO()
 bool SyntaxAnalyser::on_LZ()
 {
     outOfBounds;
-    if(tokenList->at(it).getType() == AND)
+    if(tokenList.at(it).getType() == AND)
         return true;
 
-    if(tokenList->at(it).getType() == OR)
+    if(tokenList.at(it).getType() == OR)
         return true;
 
     return false;
@@ -431,12 +430,12 @@ bool SyntaxAnalyser::on_IF()
     int flag = 0; // ƒл€ проверки закрыти€ скобок
 
     outOfBounds;
-    if (tokenList->at(it).getType() != IF)
+    if (tokenList.at(it).getType() != IF)
         return false;
 
     saveIt = it;
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR) {
+    if (tokenList.at(it).getType() != LBR) {
         rollBack(saveIt);
         flag++;
     }
@@ -455,7 +454,7 @@ bool SyntaxAnalyser::on_IF()
 
     saveIt = it;
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR) {
+    if (tokenList.at(it).getType() != RBR) {
         rollBack(saveIt);
         flag++;
     }
@@ -464,7 +463,7 @@ bool SyntaxAnalyser::on_IF()
         throw error.syntaxError("ќшибка закрыти€ скобок в операторе if.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LFBR)
+    if (tokenList.at(it).getType() != LFBR)
         throw error.syntaxError("ќшибка в операторе if.");
 
     saveIt = it;
@@ -473,14 +472,14 @@ bool SyntaxAnalyser::on_IF()
         rollBack(saveIt);
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RFBR)
+    if (tokenList.at(it).getType() != RFBR)
         throw error.syntaxError("ќшибка в операторе if.");
 
     saveIt = it;
     if (++it >= sizeList)
         return true;
 
-    if (tokenList->at(it).getType() == ELSE) {
+    if (tokenList.at(it).getType() == ELSE) {
         if (on_ELSE() == 2) {
             throw error.syntaxError("ќшибка в операторе else.");
         }
@@ -509,13 +508,13 @@ int SyntaxAnalyser::on_ELSE()
 {
     saveIt = it;
     outOfBounds;
-    if (tokenList->at(it).getType() == LFBR) {
+    if (tokenList.at(it).getType() == LFBR) {
         saveIt = it;
         if (!on_BO())
             rollBack(saveIt);
 
         outOfBounds;
-        if (tokenList->at(it).getType() == RFBR)
+        if (tokenList.at(it).getType() == RFBR)
             return 1;
     }
     else {
@@ -551,7 +550,7 @@ bool SyntaxAnalyser::on_CFOR()
         rollBack(saveIt);
 
         outOfBounds;
-        if(tokenList->at(it).getType() != ASS)
+        if(tokenList.at(it).getType() != ASS)
             throw error.syntaxError("ќшибка в условии оператора for.");
 
         saveIt = it;
@@ -562,7 +561,7 @@ bool SyntaxAnalyser::on_CFOR()
         }
 
         outOfBounds;
-        if(tokenList->at(it).getType() != SCOL)
+        if(tokenList.at(it).getType() != SCOL)
             throw error.syntaxError("ќшибка в условии оператора for.");
 
         if(!on_I()){
@@ -580,7 +579,7 @@ bool SyntaxAnalyser::on_CFOR()
         }
 
         outOfBounds;
-        if(tokenList->at(it).getType() != SCOL)
+        if(tokenList.at(it).getType() != SCOL)
             throw error.syntaxError("ќшибка в условии оператора for.");
 
         if(!on_I()){
@@ -588,7 +587,7 @@ bool SyntaxAnalyser::on_CFOR()
         }
 
         outOfBounds;
-        if (tokenList->at(it).getType() != EQUAL)
+        if (tokenList.at(it).getType() != EQUAL)
             throw error.syntaxError("ќшибка в условии оператора for.");
 
         if (!on_I()) {
@@ -618,7 +617,7 @@ bool SyntaxAnalyser::on_FOR()
 {
     int res;
     outOfBounds;
-    if(tokenList->at(it).getType() != FOR)
+    if(tokenList.at(it).getType() != FOR)
         return false;
 
     saveIt = it;
@@ -626,7 +625,7 @@ bool SyntaxAnalyser::on_FOR()
         rollBack(saveIt);
 
     outOfBounds;
-    if(tokenList->at(it).getType() != LFBR)
+    if(tokenList.at(it).getType() != LFBR)
         throw error.syntaxError("ќшибка в операторе for.");
 
     saveIt = it;
@@ -637,7 +636,7 @@ bool SyntaxAnalyser::on_FOR()
         throw error.syntaxError("ќшибка в операторе for.");
 
     outOfBounds;
-    if(tokenList->at(it).getType() != RFBR)
+    if(tokenList.at(it).getType() != RFBR)
         throw error.syntaxError("ќшибка в операторе for.");
 
     return true;
@@ -716,7 +715,7 @@ int SyntaxAnalyser::on_O()
         }
     }
 
-    if (tokenList->at(it + 1).getType() != RFBR)
+    if (tokenList.at(it + 1).getType() != RFBR)
         if (!on_NL())
             return 2;
 
@@ -735,7 +734,7 @@ bool SyntaxAnalyser::on_CFUN()
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR)
+    if (tokenList.at(it).getType() != LBR)
         return false;
 
     saveIt = it;
@@ -743,7 +742,7 @@ bool SyntaxAnalyser::on_CFUN()
         rollBack(saveIt);
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR)
+    if (tokenList.at(it).getType() != RBR)
         throw error.syntaxError("ќшибка при вызове функции.");
 
     return true;
@@ -763,7 +762,7 @@ bool SyntaxAnalyser::on_PF()
     {
         saveIt = it;
         outOfBounds;
-        if (tokenList->at(it).getType() != COMMA) {
+        if (tokenList.at(it).getType() != COMMA) {
             rollBack(saveIt);
             break;
         }
@@ -786,11 +785,11 @@ bool SyntaxAnalyser::on_PF()
 bool SyntaxAnalyser::on_PRINT()
 {
     outOfBounds;
-    if (tokenList->at(it).getType() != FPRINTLN)
+    if (tokenList.at(it).getType() != FPRINTLN)
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR)
+    if (tokenList.at(it).getType() != LBR)
         throw error.syntaxError("ќшибка в функции fmt.Prtintln.");
 
     saveIt = it;
@@ -814,7 +813,7 @@ bool SyntaxAnalyser::on_PRINT()
     {
         saveIt = it;
         outOfBounds;
-        if (tokenList->at(it).getType() != COMMA)
+        if (tokenList.at(it).getType() != COMMA)
         {
             rollBack(saveIt);
             break;
@@ -837,7 +836,7 @@ bool SyntaxAnalyser::on_PRINT()
     }
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR)
+    if (tokenList.at(it).getType() != RBR)
         throw error.syntaxError("ќшибка в функции fmt.Prtintln.");
 
     return true;
@@ -847,11 +846,11 @@ bool SyntaxAnalyser::on_PRINT()
 bool SyntaxAnalyser::on_SQRT()
 {
     outOfBounds;
-    if (tokenList->at(it).getType() != FSQRT)
+    if (tokenList.at(it).getType() != FSQRT)
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LBR)
+    if (tokenList.at(it).getType() != LBR)
         throw error.syntaxError("ќшибка в функции math.Sqrt.");
 
     saveIt = it;
@@ -863,7 +862,7 @@ bool SyntaxAnalyser::on_SQRT()
     }
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RBR)
+    if (tokenList.at(it).getType() != RBR)
         throw error.syntaxError("ќшибка в функции math.Sqrt.");
 
     return true;
@@ -877,7 +876,7 @@ bool SyntaxAnalyser::on_SQRT()
 bool SyntaxAnalyser::on_V()
 {
     outOfBounds;
-    if (tokenList->at(it).getType() != VAR)
+    if (tokenList.at(it).getType() != VAR)
         return false;
 
     if (!on_I())
@@ -885,9 +884,9 @@ bool SyntaxAnalyser::on_V()
 
     // ѕроверка на пересечение с объ€влением массива: если это оказалось объ€вление массива, то return false
     saveIt = it;
-    if (!on_T() && tokenList->at(it).getType() != LSQBR && tokenList->at(it).getType() != COMMA)
+    if (!on_T() && tokenList.at(it).getType() != LSQBR && tokenList.at(it).getType() != COMMA)
         throw error.syntaxError("ќшибка в объ€влении переменной.");
-    else if (tokenList->at(it).getType() == LSQBR)
+    else if (tokenList.at(it).getType() == LSQBR)
         return false;
     rollBack(saveIt); // it возвращаетс€ на прежнюю позицию после проверки
 
@@ -895,7 +894,7 @@ bool SyntaxAnalyser::on_V()
     {
         rollBack(saveIt);
         outOfBounds;
-        if(tokenList->at(it).getType() != COMMA)
+        if(tokenList.at(it).getType() != COMMA)
         {
             throw error.syntaxError("ќшибка в объ€влении переменной.");
         }
@@ -908,7 +907,7 @@ bool SyntaxAnalyser::on_V()
         {
             saveIt = it;
             outOfBounds;
-            if(tokenList->at(it).getType() != COMMA)
+            if(tokenList.at(it).getType() != COMMA)
             {
                 rollBack(saveIt);
                 break;
@@ -928,7 +927,7 @@ bool SyntaxAnalyser::on_V()
     {
         saveIt = it;
         outOfBounds;
-        if(tokenList->at(it).getType() != EQUAL)
+        if(tokenList.at(it).getType() != EQUAL)
         {
             rollBack(saveIt);
             return true;
@@ -948,21 +947,21 @@ bool SyntaxAnalyser::on_V()
 bool SyntaxAnalyser::on_MAS()
 {
     outOfBounds;
-    if (tokenList->at(it).getType() != VAR)
+    if (tokenList.at(it).getType() != VAR)
         return false;
 
     if (!on_I())
         throw error.syntaxError("ќшибка в объ€влении массива.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LSQBR )
+    if (tokenList.at(it).getType() != LSQBR )
         return false;
 
     if (!on_N())
         throw error.syntaxError("ќшибка в объ€влении массива.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RSQBR)
+    if (tokenList.at(it).getType() != RSQBR)
         return false;
 
     if (!on_T())
@@ -977,7 +976,7 @@ bool SyntaxAnalyser::on_MAS()
 bool SyntaxAnalyser::on_RET()
 {
     outOfBounds;
-    if (tokenList->at(it).getType() != RETURN)
+    if (tokenList.at(it).getType() != RETURN)
         return false;
 
     saveIt = it;
@@ -1037,14 +1036,14 @@ bool SyntaxAnalyser::on_EMAS()
         return false;
 
     outOfBounds;
-    if (tokenList->at(it).getType() != LSQBR)
+    if (tokenList.at(it).getType() != LSQBR)
         return false;
 
     if (!on_N())
         throw error.syntaxError("ќшибка обращени€ к элементу массива.");
 
     outOfBounds;
-    if (tokenList->at(it).getType() != RSQBR)
+    if (tokenList.at(it).getType() != RSQBR)
         throw error.syntaxError("ќшибка обращени€ к элементу массива.");
 
     return true;
@@ -1062,7 +1061,7 @@ bool SyntaxAnalyser::on_OASS()
     }
 
     outOfBounds;
-    if (tokenList->at(it).getType() != EQUAL)
+    if (tokenList.at(it).getType() != EQUAL)
         throw error.syntaxError("ќшибка в операторе присваивани€.");
 
     if (!on_BF())
@@ -1124,14 +1123,14 @@ bool SyntaxAnalyser::on_BM()
                 {
                     rollBack(saveIt);
                     outOfBounds;
-                    if (tokenList->at(it).getType() != LBR)
+                    if (tokenList.at(it).getType() != LBR)
                         throw error.syntaxError("ќшибка в множителе.");
 
                     if (!on_BF())
                         throw error.syntaxError("ќшибка в множителе.");
 
                     outOfBounds;
-                    if (tokenList->at(it).getType() != RBR)
+                    if (tokenList.at(it).getType() != RBR)
                         throw error.syntaxError("ќшибка в множителе.");
                 }
 
