@@ -14,58 +14,58 @@ private:
     void rollBack(int saveIt);
     void optimization();
 
-    // Ìèíèìàëüíûå íåòåðìèíàëû
-    bool on_ST();    // [Ñòðîêà] ST -> STR
-    bool on_N();     // [×èñëî] N -> NUM
-    bool on_I();     // [Èäåíòèôèêàòîð] I -> IDENT
-    bool on_T();     // [Òèï] T -> INT | FLOAT64
-    bool on_Z();     // [Çíàê ÷èñëà] Z -> "+" | "-"
-    bool on_M();     // [Çíàê ìíîæèòåëåé] M -> "*" | "/"
-    bool on_NL();    // [Íîâàÿ ñòðîêà] NL -> "\n" | ";"
-    bool on_LO();    // [Çíàê îòíîøåíèÿ] LO -> "==" | ">"  | "<" | ">=" | "<="
-    bool on_LZ();    // [Ëîãè÷åñêèå çíàêè] LZ -> "&&" | "||"
+    // ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ñ‹Ðµ Ð½ÐµÑ‚ÐµÑ€Ð¼Ð¸Ð½Ð°Ð»Ñ‹
+    bool on_ST();    // [Ð¡Ñ‚Ñ€Ð¾ÐºÐ°] ST -> STR
+    bool on_N();     // [Ð§Ð¸ÑÐ»Ð¾] N -> NUM
+    bool on_I();     // [Ð˜Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€] I -> IDENT
+    bool on_T();     // [Ð¢Ð¸Ð¿] T -> INT | FLOAT64
+    bool on_Z();     // [Ð—Ð½Ð°Ðº Ñ‡Ð¸ÑÐ»Ð°] Z -> "+" | "-"
+    bool on_M();     // [Ð—Ð½Ð°Ðº Ð¼Ð½Ð¾Ð¶Ð¸Ñ‚ÐµÐ»ÐµÐ¹] M -> "*" | "/"
+    bool on_NL();    // [ÐÐ¾Ð²Ð°Ñ ÑÑ‚Ñ€Ð¾ÐºÐ°] NL -> "\n" | ";"
+    bool on_LO();    // [Ð—Ð½Ð°Ðº Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ] LO -> "==" | ">"  | "<" | ">=" | "<="
+    bool on_LZ();    // [Ð›Ð¾Ð³Ð¸Ñ‡ÐµÑÐºÐ¸Ðµ Ð·Ð½Ð°ÐºÐ¸] LZ -> "&&" | "||"
 
-    // Óñëîâíûé îïåðàòîð
-    void on_CIF();   // [Óñëîâèå IF] CIF -> BF => LO => BF
-    bool on_IF();    // [Áëîê IF] IF -> "if" => ["("] => CIF => {LZ => CIF} => [")"] => "{" => [BO] => "}" [ "else" => ELSE]
-    int on_ELSE();   // [Áëîê ELSE] ELSE -> IF | ("{" => [BO] => "}")
+    // Ð£ÑÐ»Ð¾Ð²Ð½Ñ‹Ð¹ Ð¾Ð¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€
+    void on_CIF();   // [Ð£ÑÐ»Ð¾Ð²Ð¸Ðµ IF] CIF -> BF => LO => BF
+    bool on_IF();    // [Ð‘Ð»Ð¾Ðº IF] IF -> "if" => ["("] => CIF => {LZ => CIF} => [")"] => "{" => [BO] => "}" [ "else" => ELSE]
+    int on_ELSE();   // [Ð‘Ð»Ð¾Ðº ELSE] ELSE -> IF | ("{" => [BO] => "}")
 
-    // Öèêëè÷åñêèé îïåðàòîð
-    bool on_CFOR();  // [Óñëîâèå FOR] CFOR -> I => (LO => I | N) | (":=" => I | N => ";" => I => LO => I | N => ";" => I => "=" => I => Z | M => I | N)
-    bool on_FOR();   // [Áëîê FOR] FOR -> "for" => [CFOR] => "{" => [BO] => "}"
+    // Ð¦Ð¸ÐºÐ»Ð¸Ñ‡ÐµÑÐºÐ¸Ð¹ Ð¾Ð¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€
+    bool on_CFOR();  // [Ð£ÑÐ»Ð¾Ð²Ð¸Ðµ FOR] CFOR -> I => (LO => I | N) | (":=" => I | N => ";" => I => LO => I | N => ";" => I => "=" => I => Z | M => I | N)
+    bool on_FOR();   // [Ð‘Ð»Ð¾Ðº FOR] FOR -> "for" => [CFOR] => "{" => [BO] => "}"
 
-    // Ñîñòàâíîé îïåðàòîð
-    int on_O();      // [Îïåðàòîð] O -> O | F | W | WR | RR => [NL]
-    int on_BO();     // [Áëîê îïåðàòîðîâ] BO -> [O => {NL => O}]
+    // Ð¡Ð¾ÑÑ‚Ð°Ð²Ð½Ð¾Ð¹ Ð¾Ð¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€
+    int on_O();      // [ÐžÐ¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€] O -> O | F | W | WR | RR => [NL]
+    int on_BO();     // [Ð‘Ð»Ð¾Ðº Ð¾Ð¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€Ð¾Ð²] BO -> [O => {NL => O}]
 
-    // Îáúÿâëåíèå ïåðåìåííûõ
+    // ÐžÐ±ÑŠÑÐ²Ð»ÐµÐ½Ð¸Ðµ Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ñ…
     bool on_V();     // V -> "var" => I => T => ["=" => N] | {"," => I}
-    bool on_MAS();   // [Ìàññèâ] MAS -> "var" => I => "[" => N => "]" => T
+    bool on_MAS();   // [ÐœÐ°ÑÑÐ¸Ð²] MAS -> "var" => I => "[" => N => "]" => T
 
-    bool on_P();     // [Ãëàâíîå ïðàâèëî] P => PAC => IMP => MB
+    bool on_P();     // [Ð“Ð»Ð°Ð²Ð½Ð¾Ðµ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð¾] P => PAC => IMP => MB
     bool on_PAC();   // [package main] on_Pac => "package" -> I => NL
     bool on_IMP();   // [import] IMP -> "(" => STR | NL => ")" => NL
-    bool on_MB();    // [Òåëî ïðîãðàììû] MB -> {FUN} => MAIN => {FUN}
+    bool on_MB();    // [Ð¢ÐµÐ»Ð¾ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹] MB -> {FUN} => MAIN => {FUN}
 
-    bool on_CFUN();  // [Âûçîâ ôóíêöèè] CFUN -> I => "(" => [PF] => ")"
-    bool on_PF();    // [Ïàðàìåòðû âûçîâà ôóíêöèè] PF -> BF => {"," => BF}
+    bool on_CFUN();  // [Ð’Ñ‹Ð·Ð¾Ð² Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸] CFUN -> I => "(" => [PF] => ")"
+    bool on_PF();    // [ÐŸÐ°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ Ð²Ñ‹Ð·Ð¾Ð²Ð° Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸] PF -> BF => {"," => BF}
 
-    // Îáúÿâëåíèå ôóíêöèé
-    bool on_MAIN();  // [Ôóíêöèÿ main] MAIN -> "func" => "main" => "(" => ")" => "{" => [BO] => "}"
-    bool on_FUN();   // [Ôóíêöèÿ] FUN -> "func" => I => "(" => [I => T => {"," => I => T}] =>")" => T => "{" => [BO] => "}"
+    // ÐžÐ±ÑŠÑÐ²Ð»ÐµÐ½Ð¸Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¹
+    bool on_MAIN();  // [Ð¤ÑƒÐ½ÐºÑ†Ð¸Ñ main] MAIN -> "func" => "main" => "(" => ")" => "{" => [BO] => "}"
+    bool on_FUN();   // [Ð¤ÑƒÐ½ÐºÑ†Ð¸Ñ] FUN -> "func" => I => "(" => [I => T => {"," => I => T}] =>")" => T => "{" => [BO] => "}"
 
     bool on_PRINT(); // [fmt.Println] PRINT -> "fmt.Println" => "(" => STR | CFUN | N | I => { "," => STR | CFUN | N | I} => ")"
     bool on_SQRT();  // [math.Sqrt] SQRT -> "math.Sqrt" => "(" => I | N => ")"
     bool on_RET();   // [return] RET -> "return" => CFUN | N | I => {M | Z => CFUN | N | I}
 
-    bool on_EMAS();  // [Ýëåìåíò ìàññèâà] EMAS -> I => "[" => N => "]"
+    bool on_EMAS();  // [Ð­Ð»ÐµÐ¼ÐµÐ½Ñ‚ Ð¼Ð°ÑÑÐ¸Ð²Ð°] EMAS -> I => "[" => N => "]"
 
-    bool on_OASS();  // [Îïåðàòîð ïðèñâàèâàíèÿ] OASS -> ( I | EMAS ) => "=" => BF
+    bool on_OASS();  // [ÐžÐ¿ÐµÑ€Ð°Ñ‚Ð¾Ñ€ Ð¿Ñ€Ð¸ÑÐ²Ð°Ð¸Ð²Ð°Ð½Ð¸Ñ] OASS -> ( I | EMAS ) => "=" => BF
 
-    // Àðèôìåòè÷åñêèå âûðàæåíèÿ
-    bool on_BM();    // [Ìíîæèòåëü] BM -> I | N | EMAS | "(" => BF => ")"
-    bool on_BS();    // [Ñëàãàåìîå] BS -> BM | [(M | Z) => BS]
-    bool on_BF();    // [Ôîðìóëà] BF -> [Z] => BS
+    // ÐÑ€Ð¸Ñ„Ð¼ÐµÑ‚Ð¸Ñ‡ÐµÑÐºÐ¸Ðµ Ð²Ñ‹Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ
+    bool on_BM();    // [ÐœÐ½Ð¾Ð¶Ð¸Ñ‚ÐµÐ»ÑŒ] BM -> I | N | EMAS | "(" => BF => ")"
+    bool on_BS();    // [Ð¡Ð»Ð°Ð³Ð°ÐµÐ¼Ð¾Ðµ] BS -> BM | [(M | Z) => BS]
+    bool on_BF();    // [Ð¤Ð¾Ñ€Ð¼ÑƒÐ»Ð°] BF -> [Z] => BS
 
 public:
     SyntaxAnalyser(vector<Token> &tokens);

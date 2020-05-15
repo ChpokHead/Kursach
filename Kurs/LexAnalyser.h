@@ -10,22 +10,22 @@
 
 using namespace std;
 
-typedef pair<Statement, Output> Result; // Пара (Новое Состояние & Выходной сигнал)
-typedef pair<Statement, char> Input; // Составной ключ (Текущее Состояние & Входной символ)
-typedef pair<Input, Result> Item; //Элемент таблицы переходов
-extern map<Input, Result> M; // Таблица переходов КА
-extern map<string, Output> Keywords; //Таблица служебных слов
+typedef pair<Statement, Output> Result; // РџР°СЂР° (РќРѕРІРѕРµ РЎРѕСЃС‚РѕСЏРЅРёРµ & Р’С‹С…РѕРґРЅРѕР№ СЃРёРіРЅР°Р»)
+typedef pair<Statement, char> Input; // РЎРѕСЃС‚Р°РІРЅРѕР№ РєР»СЋС‡ (РўРµРєСѓС‰РµРµ РЎРѕСЃС‚РѕСЏРЅРёРµ & Р’С…РѕРґРЅРѕР№ СЃРёРјРІРѕР»)
+typedef pair<Input, Result> Item; //Р­Р»РµРјРµРЅС‚ С‚Р°Р±Р»РёС†С‹ РїРµСЂРµС…РѕРґРѕРІ
+extern map<Input, Result> M; // РўР°Р±Р»РёС†Р° РїРµСЂРµС…РѕРґРѕРІ РљРђ
+extern map<string, Output> Keywords; //РўР°Р±Р»РёС†Р° СЃР»СѓР¶РµР±РЅС‹С… СЃР»РѕРІ
 
-//Класс лексического анализатора
+//РљР»Р°СЃСЃ Р»РµРєСЃРёС‡РµСЃРєРѕРіРѕ Р°РЅР°Р»РёР·Р°С‚РѕСЂР°
 class LexAnalyser {
 public:
-    LexAnalyser(const char* fname); //Конструктор
-    ~LexAnalyser(); //Деструктор
-    bool getToken(Token& token); //Функция получения очередной лексемы
+    LexAnalyser(const char* fname); //РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    ~LexAnalyser(); //Р”РµСЃС‚СЂСѓРєС‚РѕСЂ
+    bool getToken(Token& token); //Р¤СѓРЅРєС†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ РѕС‡РµСЂРµРґРЅРѕР№ Р»РµРєСЃРµРјС‹
     vector<Token>& getTokenList() { return tokenList; };
 
 private:
-    ifstream _file; //Файловый поток для чтения cимволов входной цепочки
+    ifstream _file; //Р¤Р°Р№Р»РѕРІС‹Р№ РїРѕС‚РѕРє РґР»СЏ С‡С‚РµРЅРёСЏ cРёРјРІРѕР»РѕРІ РІС…РѕРґРЅРѕР№ С†РµРїРѕС‡РєРё
     bool isLast, isStrCon;
     vector<Token> tokenList;
     ErrorHandler error;

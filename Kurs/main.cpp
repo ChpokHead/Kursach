@@ -4,17 +4,15 @@
 
 int main (int argc, char* argv[])
 {
-    setlocale(LC_ALL, "Russian");
-
     Token token;
     
     try
     {
-        LexAnalyser lex("in.txt");
+        LexAnalyser lex("/Users/danilihsanov/CLionProjects/Kursach/Kurs/in.txt");
 
         while (lex.getToken(token))
         {
-            cout << "Ëåêñåìà: '" << token.getValue() << "' --- "; 
+            cout << "Ð›ÐµÐºÑÐµÐ¼Ð¼Ð°: '" << token.getValue() << "' --- ";
             token.printToken();
         }
 

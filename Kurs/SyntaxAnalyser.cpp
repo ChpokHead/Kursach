@@ -12,7 +12,7 @@ void SyntaxAnalyser::rollBack(int saveIt)
     it = saveIt;
 }
 
-// Оптимизация - удаление лишних BSLASH в векторе
+// РћРїС‚РёРјРёР·Р°С†РёСЏ - СѓРґР°Р»РµРЅРёРµ Р»РёС€РЅРёС… BSLASH РІ РІРµРєС‚РѕСЂРµ
 void SyntaxAnalyser::optimization()
 {
     bool flag = false;
@@ -21,13 +21,13 @@ void SyntaxAnalyser::optimization()
     while (it->getType() == BSLASH || it->getType() == SCOL)
     {
         it = tokenList.erase(it);
-        // Если вдруг программа состоит только из \n и ;
-        if (it == tokenList.end()) throw error.syntaxError("Программа не имеет операторов.");
+        // Р•СЃР»Рё РІРґСЂСѓРі РїСЂРѕРіСЂР°РјРјР° СЃРѕСЃС‚РѕРёС‚ С‚РѕР»СЊРєРѕ РёР· \n Рё ;
+        if (it == tokenList.end()) throw error.syntaxError("РџСЂРѕРіСЂР°РјРјР° РЅРµ РёРјРµРµС‚ РѕРїРµСЂР°С‚РѕСЂРѕРІ.");
     }
 
     while (it != tokenList.end())
     {
-        // Удаление \n и ; после открывающихся скобок
+        // РЈРґР°Р»РµРЅРёРµ \n Рё ; РїРѕСЃР»Рµ РѕС‚РєСЂС‹РІР°СЋС‰РёС…СЃСЏ СЃРєРѕР±РѕРє
         if (it->getType() == LBR || it->getType() == LFBR)
         {
             if (++it == tokenList.end()) break;
@@ -37,7 +37,7 @@ void SyntaxAnalyser::optimization()
                 if (it == tokenList.end()) break;
             }
         }
-            // Удаление \n и ; до закрывающихся скобок
+            // РЈРґР°Р»РµРЅРёРµ \n Рё ; РґРѕ Р·Р°РєСЂС‹РІР°СЋС‰РёС…СЃСЏ СЃРєРѕР±РѕРє
         else if (it->getType() == RBR || it->getType() == RFBR)
         {
             if (it == tokenList.begin())
@@ -82,11 +82,11 @@ void SyntaxAnalyser::optimization()
     }
 }
 
-// Главный метод, с которого начинается синтаксический анализ
+// Р“Р»Р°РІРЅС‹Р№ РјРµС‚РѕРґ, СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР·
 void SyntaxAnalyser::analyse() {
     if (on_P()) {
         cout << endl << "-----------------------------------------";
-        cout << "\nСИНТАКСИЧЕЙСКИЙ АНАЛИЗ ПРОЙДЕН УСПЕШНО! |" << endl;
+        cout << "\nРЎРРќРўРђРљРЎРР§Р•Р™РЎРљРР™ РђРќРђР›РР— РџР РћР™Р”Р•Рќ РЈРЎРџР•РЁРќРћ! |" << endl;
         cout << "-----------------------------------------" << endl;
     }
     else
@@ -96,13 +96,13 @@ void SyntaxAnalyser::analyse() {
 // P -> PAC -> IMP -> MB
 bool SyntaxAnalyser::on_P() {
     if (!on_PAC()) // OK
-        throw error.syntaxError("Ошибка в объявлении package.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё package.");
 
     if (!on_IMP()) // OK
-        throw error.syntaxError("Ошибка в объявлении import.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё import.");
 
     if(!on_MB())
-        throw error.syntaxError("Ошибка в теле программы.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С‚РµР»Рµ РїСЂРѕРіСЂР°РјРјС‹.");
 
     return true;
 }
@@ -165,12 +165,12 @@ bool SyntaxAnalyser::on_IMP() {
 }
 
 
-// [Тело программы] MB -> {FUN => NL} =>  MAIN => [NL]
+// [РўРµР»Рѕ РїСЂРѕРіСЂР°РјРјС‹] MB -> {FUN => NL} =>  MAIN => [NL]
 bool SyntaxAnalyser::on_MB()
 {
     while (1)
     {
-        // Создаем tempSaveIt, т.к. в on_FUN saveIt изменяется и на выходе имеет другое значение
+        // РЎРѕР·РґР°РµРј tempSaveIt, С‚.Рє. РІ on_FUN saveIt РёР·РјРµРЅСЏРµС‚СЃСЏ Рё РЅР° РІС‹С…РѕРґРµ РёРјРµРµС‚ РґСЂСѓРіРѕРµ Р·РЅР°С‡РµРЅРёРµ
         int tempSaveIt = it;
         if (on_FUN() == 0) {
             rollBack(tempSaveIt);
@@ -182,7 +182,7 @@ bool SyntaxAnalyser::on_MB()
     }
 
     if (on_MAIN() == 0) {
-        throw error.syntaxError("Ожидалась функция main.");
+        throw error.syntaxError("РћР¶РёРґР°Р»Р°СЃСЊ С„СѓРЅРєС†РёСЏ main.");
     }
 
     saveIt = it;
@@ -192,7 +192,7 @@ bool SyntaxAnalyser::on_MB()
     return true;
 }
 
-// [Функция main] MAIN -> "func" => "main" => "(" => ")" => "{" => [BO] => "}"
+// [Р¤СѓРЅРєС†РёСЏ main] MAIN -> "func" => "main" => "(" => ")" => "{" => [BO] => "}"
 bool SyntaxAnalyser::on_MAIN()
 {
     int res;
@@ -202,35 +202,35 @@ bool SyntaxAnalyser::on_MAIN()
 
     outOfBounds;
     if (tokenList.at(it).getType() != MAIN)
-        throw error.syntaxError("Ошибка в объявлении main.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё main.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
-        throw error.syntaxError("Ошибка в объявлении main.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё main.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
-        throw error.syntaxError("Ошибка в объявлении main.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё main.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != LFBR)
-        throw error.syntaxError("Ошибка в объявлении main.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё main.");
 
     saveIt = it;
     res = on_BO();
     if (res == 0)
         rollBack(saveIt);
     else if(res == 2)
-        throw error.syntaxError("Ошибка в теле main.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С‚РµР»Рµ main.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != RFBR)
-        throw error.syntaxError("Ошибка в теле main.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С‚РµР»Рµ main.");
 
     return true;
 }
 
-// [Функция] FUN -> "func" => I => "(" => [I => T => {"," => I => T}] =>")" => T => "{" => [BO] => "}"
+// [Р¤СѓРЅРєС†РёСЏ] FUN -> "func" => I => "(" => [I => T => {"," => I => T}] =>")" => T => "{" => [BO] => "}"
 bool SyntaxAnalyser::on_FUN()
 {
     int res;
@@ -239,20 +239,20 @@ bool SyntaxAnalyser::on_FUN()
         return false;
 
     if (!on_I() && tokenList.at(it).getType() != MAIN)
-        throw error.syntaxError("Ошибка в объявлении функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
     else if(tokenList.at(it).getType() == MAIN)
         return false;
 
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
-        throw error.syntaxError("Ошибка в объявлении функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
 
     saveIt = it;
     if (on_I()) {
 
         saveIt = it;
         if (!on_T())
-            throw error.syntaxError("Ошибка в объявлении функции.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
 
         saveIt = it;
         while (1)
@@ -260,10 +260,10 @@ bool SyntaxAnalyser::on_FUN()
             outOfBounds;
             if (tokenList.at(it).getType() == COMMA) {
                 if (!on_I())
-                    throw error.syntaxError("Ошибка в объявлении функции.");
+                    throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
 
                 if (!on_T())
-                    throw error.syntaxError("Ошибка в объявлении функции.");
+                    throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
             }
             else {
                 rollBack(saveIt);
@@ -277,33 +277,33 @@ bool SyntaxAnalyser::on_FUN()
 
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
-        throw error.syntaxError("Ошибка в объявлении функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
 
     if (!on_T())
-        throw error.syntaxError("Ошибка в объявлении функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != LFBR)
-        throw error.syntaxError("Ошибка в объявлении функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё С„СѓРЅРєС†РёРё.");
 
     saveIt = it;
     res = on_BO();
     if (res == 0)
         rollBack(saveIt);
     else if(res == 2)
-        throw error.syntaxError("Ошибка в теле функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С‚РµР»Рµ С„СѓРЅРєС†РёРё.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != RFBR)
-        throw error.syntaxError("Ошибка в теле функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С‚РµР»Рµ С„СѓРЅРєС†РёРё.");
 
     return true;
 }
 
 
-////////////////////////// Минимальные нетерминалы //////////////////////////
+////////////////////////// РњРёРЅРёРјР°Р»СЊРЅС‹Рµ РЅРµС‚РµСЂРјРёРЅР°Р»С‹ //////////////////////////
 
-// [Строка] ST => STR
+// [РЎС‚СЂРѕРєР°] ST => STR
 bool SyntaxAnalyser::on_ST()
 {
     outOfBounds;
@@ -314,7 +314,7 @@ bool SyntaxAnalyser::on_ST()
     return false;
 }
 
-// [Число] N -> NUM
+// [Р§РёСЃР»Рѕ] N -> NUM
 bool SyntaxAnalyser::on_N()
 {
     outOfBounds;
@@ -325,7 +325,7 @@ bool SyntaxAnalyser::on_N()
     return false;
 }
 
-// [Идентификатор] I -> IDENT
+// [РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ] I -> IDENT
 bool SyntaxAnalyser::on_I()
 {
     outOfBounds;
@@ -336,7 +336,7 @@ bool SyntaxAnalyser::on_I()
     return false;
 }
 
-// [Тип] T -> INT | FLOAT64
+// [РўРёРї] T -> INT | FLOAT64
 bool SyntaxAnalyser::on_T()
 {
     outOfBounds;
@@ -347,7 +347,7 @@ bool SyntaxAnalyser::on_T()
     return false;
 }
 
-// [Знак числа] Z -> "+" | "-"
+// [Р—РЅР°Рє С‡РёСЃР»Р°] Z -> "+" | "-"
 bool SyntaxAnalyser::on_Z()
 {
     outOfBounds;
@@ -358,7 +358,7 @@ bool SyntaxAnalyser::on_Z()
     return false;
 }
 
-// [Знак множителей] M -> "*" | "/"
+// [Р—РЅР°Рє РјРЅРѕР¶РёС‚РµР»РµР№] M -> "*" | "/"
 bool SyntaxAnalyser::on_M()
 {
     outOfBounds;
@@ -369,7 +369,7 @@ bool SyntaxAnalyser::on_M()
     return false;
 }
 
-// [Новая строка] NL -> "\n" | ";"
+// [РќРѕРІР°СЏ СЃС‚СЂРѕРєР°] NL -> "\n" | ";"
 bool SyntaxAnalyser::on_NL()
 {
     outOfBounds;
@@ -380,7 +380,7 @@ bool SyntaxAnalyser::on_NL()
     return false;
 }
 
-// [Знак отношения] LO -> "==" | ">" | "<" | ">=" | "<=" | "!="
+// [Р—РЅР°Рє РѕС‚РЅРѕС€РµРЅРёСЏ] LO -> "==" | ">" | "<" | ">=" | "<=" | "!="
 bool SyntaxAnalyser::on_LO()
 {
     outOfBounds;
@@ -406,7 +406,7 @@ bool SyntaxAnalyser::on_LO()
     return  false;
 }
 
-// [Логические знаки] LZ -> "&&" | "||"
+// [Р›РѕРіРёС‡РµСЃРєРёРµ Р·РЅР°РєРё] LZ -> "&&" | "||"
 bool SyntaxAnalyser::on_LZ()
 {
     outOfBounds;
@@ -421,13 +421,13 @@ bool SyntaxAnalyser::on_LZ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////// Условный оператор ///////////////////////////////
+/////////////////////////// РЈСЃР»РѕРІРЅС‹Р№ РѕРїРµСЂР°С‚РѕСЂ ///////////////////////////////
 
-// "else" пришлось вынуть из блока ELSE потому что конструкция if(){} else выдавалась правильной, хотя правильно else{}
-// [Оператор IF] IF -> "if" => ["("] => CIF => { LZ => CIF} => [")"] => "{" => [BO] => "}" => [ "else" => ELSE]
+// "else" РїСЂРёС€Р»РѕСЃСЊ РІС‹РЅСѓС‚СЊ РёР· Р±Р»РѕРєР° ELSE РїРѕС‚РѕРјСѓ С‡С‚Рѕ РєРѕРЅСЃС‚СЂСѓРєС†РёСЏ if(){} else РІС‹РґР°РІР°Р»Р°СЃСЊ РїСЂР°РІРёР»СЊРЅРѕР№, С…РѕС‚СЏ РїСЂР°РІРёР»СЊРЅРѕ else{}
+// [РћРїРµСЂР°С‚РѕСЂ IF] IF -> "if" => ["("] => CIF => { LZ => CIF} => [")"] => "{" => [BO] => "}" => [ "else" => ELSE]
 bool SyntaxAnalyser::on_IF()
 {
-    int flag = 0; // Для проверки закрытия скобок
+    int flag = 0; // Р”Р»СЏ РїСЂРѕРІРµСЂРєРё Р·Р°РєСЂС‹С‚РёСЏ СЃРєРѕР±РѕРє
 
     outOfBounds;
     if (tokenList.at(it).getType() != IF)
@@ -460,11 +460,11 @@ bool SyntaxAnalyser::on_IF()
     }
 
     if (flag != 0 && flag != 2)
-        throw error.syntaxError("Ошибка закрытия скобок в операторе if.");
+        throw error.syntaxError("РћС€РёР±РєР° Р·Р°РєСЂС‹С‚РёСЏ СЃРєРѕР±РѕРє РІ РѕРїРµСЂР°С‚РѕСЂРµ if.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != LFBR)
-        throw error.syntaxError("Ошибка в операторе if.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ if.");
 
     saveIt = it;
 
@@ -473,7 +473,7 @@ bool SyntaxAnalyser::on_IF()
 
     outOfBounds;
     if (tokenList.at(it).getType() != RFBR)
-        throw error.syntaxError("Ошибка в операторе if.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ if.");
 
     saveIt = it;
     if (++it >= sizeList)
@@ -481,7 +481,7 @@ bool SyntaxAnalyser::on_IF()
 
     if (tokenList.at(it).getType() == ELSE) {
         if (on_ELSE() == 2) {
-            throw error.syntaxError("Ошибка в операторе else.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ else.");
         }
     }
     else
@@ -490,20 +490,20 @@ bool SyntaxAnalyser::on_IF()
     return true;
 }
 
-// [Условие IF] CIF -> BF => LO => BF
+// [РЈСЃР»РѕРІРёРµ IF] CIF -> BF => LO => BF
 void SyntaxAnalyser::on_CIF()
 {
     if(!on_BF())
-        throw error.syntaxError("Ошибка в условии оператора if.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° if.");
 
     if (!on_LO())
-        throw error.syntaxError("Ошибка в условии оператора if.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° if.");
 
     if (!on_BF())
-        throw error.syntaxError("Ошибка в условии оператора if.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° if.");
 }
 
-// [Блок ELSE] ELSE -> ("{" => [BO] => "}") | IF
+// [Р‘Р»РѕРє ELSE] ELSE -> ("{" => [BO] => "}") | IF
 int SyntaxAnalyser::on_ELSE()
 {
     saveIt = it;
@@ -528,9 +528,9 @@ int SyntaxAnalyser::on_ELSE()
 
 /////////////////////////////////////////////////////////////////////////////
 
-///////////////////////// Циклический оператор //////////////////////////////
+///////////////////////// Р¦РёРєР»РёС‡РµСЃРєРёР№ РѕРїРµСЂР°С‚РѕСЂ //////////////////////////////
 
-// [Условие FOR] CFOR -> I => (LO => I | N) | (":=" => I | N => ";" => I => LO => I | N => ";" => I => "=" => I => Z | M => I | N)
+// [РЈСЃР»РѕРІРёРµ FOR] CFOR -> I => (LO => I | N) | (":=" => I | N => ";" => I => LO => I | N => ";" => I => "=" => I => Z | M => I | N)
 bool SyntaxAnalyser::on_CFOR()
 {
     if(!on_I()){
@@ -543,7 +543,7 @@ bool SyntaxAnalyser::on_CFOR()
         if (!on_I()) {
             rollBack(saveIt);
             if (!on_N())
-                throw error.syntaxError("Ошибка в условии оператора for.");
+                throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
         return true;
     } else {
@@ -551,68 +551,68 @@ bool SyntaxAnalyser::on_CFOR()
 
         outOfBounds;
         if(tokenList.at(it).getType() != ASS)
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
 
         saveIt = it;
         if(!on_I()){
             rollBack(saveIt);
             if(!on_N())
-                throw error.syntaxError("Ошибка в условии оператора for.");
+                throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
 
         outOfBounds;
         if(tokenList.at(it).getType() != SCOL)
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
 
         if(!on_I()){
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
 
         if(!on_LO())
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
 
         saveIt = it;
         if(!on_I()){
             rollBack(saveIt);
             if(!on_N())
-                throw error.syntaxError("Ошибка в условии оператора for.");
+                throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
 
         outOfBounds;
         if(tokenList.at(it).getType() != SCOL)
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
 
         if(!on_I()){
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
 
         outOfBounds;
         if (tokenList.at(it).getType() != EQUAL)
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
 
         if (!on_I()) {
-            throw error.syntaxError("Ошибка в условии оператора for.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
 
         saveIt = it;
         if (!on_Z()) {
             rollBack(saveIt);
             if (!on_M())
-                throw error.syntaxError("Ошибка в условии оператора for.");
+                throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
 
         saveIt = it;
         if (!on_I()) {
             rollBack(saveIt);
             if (!on_N())
-                throw error.syntaxError("Ошибка в условии оператора for.");
+                throw error.syntaxError("РћС€РёР±РєР° РІ СѓСЃР»РѕРІРёРё РѕРїРµСЂР°С‚РѕСЂР° for.");
         }
     }
 
     return true;
 }
 
-//[Блок FOR] FOR -> "for" => [CFOR] => "{" => [BO] => "}"
+//[Р‘Р»РѕРє FOR] FOR -> "for" => [CFOR] => "{" => [BO] => "}"
 bool SyntaxAnalyser::on_FOR()
 {
     int res;
@@ -626,27 +626,27 @@ bool SyntaxAnalyser::on_FOR()
 
     outOfBounds;
     if(tokenList.at(it).getType() != LFBR)
-        throw error.syntaxError("Ошибка в операторе for.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ for.");
 
     saveIt = it;
     res = on_BO();
     if (res == 0)
         rollBack(saveIt);
     else if(res == 2)
-        throw error.syntaxError("Ошибка в операторе for.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ for.");
 
     outOfBounds;
     if(tokenList.at(it).getType() != RFBR)
-        throw error.syntaxError("Ошибка в операторе for.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ for.");
 
     return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////// Блок операторов ////////////////////////////////
+//////////////////////////// Р‘Р»РѕРє РѕРїРµСЂР°С‚РѕСЂРѕРІ ////////////////////////////////
 
-// [Блок операторов] BO -> {O}
+// [Р‘Р»РѕРє РѕРїРµСЂР°С‚РѕСЂРѕРІ] BO -> {O}
 int SyntaxAnalyser::on_BO()
 {
     saveIt = it;
@@ -671,7 +671,7 @@ int SyntaxAnalyser::on_BO()
     return 1;
 }
 
-// [Оператор] O -> V | IF | FOR | CFUN => [NL]
+// [РћРїРµСЂР°С‚РѕСЂ] O -> V | IF | FOR | CFUN => [NL]
 int SyntaxAnalyser::on_O()
 {
     saveIt = it;
@@ -725,9 +725,9 @@ int SyntaxAnalyser::on_O()
 /////////////////////////////////////////////////////////////////////////////
 
 
-//////////////////////////// Объявление функции //////////////////////////////
+//////////////////////////// РћР±СЉСЏРІР»РµРЅРёРµ С„СѓРЅРєС†РёРё //////////////////////////////
 
-// [Вызов функции] CFUN -> I => "(" => [PF] => ")"
+// [Р’С‹Р·РѕРІ С„СѓРЅРєС†РёРё] CFUN -> I => "(" => [PF] => ")"
 bool SyntaxAnalyser::on_CFUN()
 {
     if (!on_I())
@@ -743,12 +743,12 @@ bool SyntaxAnalyser::on_CFUN()
 
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
-        throw error.syntaxError("Ошибка при вызове функции.");
+        throw error.syntaxError("РћС€РёР±РєР° РїСЂРё РІС‹Р·РѕРІРµ С„СѓРЅРєС†РёРё.");
 
     return true;
 }
 
-// [Параметры вызова функции] PF -> BF => {"," => BF}
+// [РџР°СЂР°РјРµС‚СЂС‹ РІС‹Р·РѕРІР° С„СѓРЅРєС†РёРё] PF -> BF => {"," => BF}
 bool SyntaxAnalyser::on_PF()
 {
     saveIt = it;
@@ -769,7 +769,7 @@ bool SyntaxAnalyser::on_PF()
 
         if (!on_BF())
         {
-            throw error.syntaxError("Ошибка в параметрах вызываемой функции.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РїР°СЂР°РјРµС‚СЂР°С… РІС‹Р·С‹РІР°РµРјРѕР№ С„СѓРЅРєС†РёРё.");
         }
     }
 
@@ -779,7 +779,7 @@ bool SyntaxAnalyser::on_PF()
 /////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////// Print и Sqrt //////////////////////////////////
+///////////////////////////// Print Рё Sqrt //////////////////////////////////
 
 // [fmt.Println] PRINT -> "fmt.Println" => "(" => STR | CFUN | N | I => { "," => STR | CFUN | N | I} => ")"
 bool SyntaxAnalyser::on_PRINT()
@@ -790,7 +790,7 @@ bool SyntaxAnalyser::on_PRINT()
 
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
-        throw error.syntaxError("Ошибка в функции fmt.Prtintln.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё fmt.Prtintln.");
 
     saveIt = it;
     if(!on_ST())
@@ -803,7 +803,7 @@ bool SyntaxAnalyser::on_PRINT()
             {
                 rollBack(saveIt);
                 if (!on_I())
-                    throw error.syntaxError("Ошибка в функции fmt.Prtintln.");
+                    throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё fmt.Prtintln.");
             }
         }
     }
@@ -829,7 +829,7 @@ bool SyntaxAnalyser::on_PRINT()
                 {
                     rollBack(saveIt);
                     if (!on_I())
-                        throw error.syntaxError("Ошибка в функции fmt.Prtintln.");
+                        throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё fmt.Prtintln.");
                 }
             }
         }
@@ -837,7 +837,7 @@ bool SyntaxAnalyser::on_PRINT()
 
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
-        throw error.syntaxError("Ошибка в функции fmt.Prtintln.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё fmt.Prtintln.");
 
     return true;
 }
@@ -851,26 +851,26 @@ bool SyntaxAnalyser::on_SQRT()
 
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
-        throw error.syntaxError("Ошибка в функции math.Sqrt.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё math.Sqrt.");
 
     saveIt = it;
     if (!on_I())
     {
         rollBack(saveIt);
         if (!on_N())
-            throw error.syntaxError("Ошибка в функции math.Sqrt.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё math.Sqrt.");
     }
 
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
-        throw error.syntaxError("Ошибка в функции math.Sqrt.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё math.Sqrt.");
 
     return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-//////////////////////// Объявление переменных //////////////////////////////
+//////////////////////// РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С… //////////////////////////////
 
 // V -> "var" => I => T | [T => "=" => [Z] = > N] | ({"," => I} => T)
 bool SyntaxAnalyser::on_V()
@@ -880,15 +880,15 @@ bool SyntaxAnalyser::on_V()
         return false;
 
     if (!on_I())
-        throw error.syntaxError("Ошибка в объявлении переменной.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№.");
 
-    // Проверка на пересечение с объявлением массива: если это оказалось объявление массива, то return false
+    // РџСЂРѕРІРµСЂРєР° РЅР° РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ РѕР±СЉСЏРІР»РµРЅРёРµРј РјР°СЃСЃРёРІР°: РµСЃР»Рё СЌС‚Рѕ РѕРєР°Р·Р°Р»РѕСЃСЊ РѕР±СЉСЏРІР»РµРЅРёРµ РјР°СЃСЃРёРІР°, С‚Рѕ return false
     saveIt = it;
     if (!on_T() && tokenList.at(it).getType() != LSQBR && tokenList.at(it).getType() != COMMA)
-        throw error.syntaxError("Ошибка в объявлении переменной.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№.");
     else if (tokenList.at(it).getType() == LSQBR)
         return false;
-    rollBack(saveIt); // it возвращается на прежнюю позицию после проверки
+    rollBack(saveIt); // it РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РЅР° РїСЂРµР¶РЅСЋСЋ РїРѕР·РёС†РёСЋ РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё
 
     if(!on_T())
     {
@@ -896,11 +896,11 @@ bool SyntaxAnalyser::on_V()
         outOfBounds;
         if(tokenList.at(it).getType() != COMMA)
         {
-            throw error.syntaxError("Ошибка в объявлении переменной.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№.");
         }
         if(!on_I())
         {
-            throw error.syntaxError("Ошибка в объявлении переменной.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№.");
         }
 
         while(1)
@@ -920,7 +920,7 @@ bool SyntaxAnalyser::on_V()
         }
         if(!on_T())
         {
-            throw error.syntaxError("Ошибка в объявлении переменной.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№.");
         }
     }
     else
@@ -936,14 +936,14 @@ bool SyntaxAnalyser::on_V()
         if(!on_Z())
             rollBack(saveIt);
         if(!on_N())
-            throw error.syntaxError("Ошибка в объявлении переменной.");
+            throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РїРµСЂРµРјРµРЅРЅРѕР№.");
 
     }
 
     return true;
 }
 
-// [Массив] MAS -> "var" => I => "[" => N => "]" => T
+// [РњР°СЃСЃРёРІ] MAS -> "var" => I => "[" => N => "]" => T
 bool SyntaxAnalyser::on_MAS()
 {
     outOfBounds;
@@ -951,21 +951,21 @@ bool SyntaxAnalyser::on_MAS()
         return false;
 
     if (!on_I())
-        throw error.syntaxError("Ошибка в объявлении массива.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РјР°СЃСЃРёРІР°.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != LSQBR )
         return false;
 
     if (!on_N())
-        throw error.syntaxError("Ошибка в объявлении массива.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РјР°СЃСЃРёРІР°.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != RSQBR)
         return false;
 
     if (!on_T())
-        throw error.syntaxError("Ошибка в объявлении массива.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕР±СЉСЏРІР»РµРЅРёРё РјР°СЃСЃРёРІР°.");
 
     return true;
 }
@@ -987,7 +987,7 @@ bool SyntaxAnalyser::on_RET()
         {
             rollBack(saveIt);
             if (!on_I())
-                throw error.syntaxError("Ошибка возвращаемого значения.");
+                throw error.syntaxError("РћС€РёР±РєР° РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.");
         }
     }
 
@@ -1004,7 +1004,7 @@ bool SyntaxAnalyser::on_RET()
             }
             else
             {
-                mark: // Лейбл goto
+                mark: // Р›РµР№Р±Р» goto
                 saveIt = it;
                 if (!on_CFUN())
                 {
@@ -1013,14 +1013,14 @@ bool SyntaxAnalyser::on_RET()
                     {
                         rollBack(saveIt);
                         if (!on_I())
-                            throw error.syntaxError("Ошибка возвращаемого значения.");
+                            throw error.syntaxError("РћС€РёР±РєР° РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.");
                     }
                 }
             }
         }
         else
         {
-            goto mark; // Для избежания дублирования кода
+            goto mark; // Р”Р»СЏ РёР·Р±РµР¶Р°РЅРёСЏ РґСѓР±Р»РёСЂРѕРІР°РЅРёСЏ РєРѕРґР°
         }
     }
 
@@ -1029,7 +1029,7 @@ bool SyntaxAnalyser::on_RET()
 
 
 
-// [Элемент массива] EMAS -> I => "[" => N => "]"
+// [Р­Р»РµРјРµРЅС‚ РјР°СЃСЃРёРІР°] EMAS -> I => "[" => N => "]"
 bool SyntaxAnalyser::on_EMAS()
 {
     if (!on_I())
@@ -1040,16 +1040,16 @@ bool SyntaxAnalyser::on_EMAS()
         return false;
 
     if (!on_N())
-        throw error.syntaxError("Ошибка обращения к элементу массива.");
+        throw error.syntaxError("РћС€РёР±РєР° РѕР±СЂР°С‰РµРЅРёСЏ Рє СЌР»РµРјРµРЅС‚Сѓ РјР°СЃСЃРёРІР°.");
 
     outOfBounds;
     if (tokenList.at(it).getType() != RSQBR)
-        throw error.syntaxError("Ошибка обращения к элементу массива.");
+        throw error.syntaxError("РћС€РёР±РєР° РѕР±СЂР°С‰РµРЅРёСЏ Рє СЌР»РµРјРµРЅС‚Сѓ РјР°СЃСЃРёРІР°.");
 
     return true;
 }
 
-// [Оператор присваивания] OASS -> ( I | EMAS ) => "=" => BF
+// [РћРїРµСЂР°С‚РѕСЂ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ] OASS -> ( I | EMAS ) => "=" => BF
 bool SyntaxAnalyser::on_OASS()
 {
     saveIt = it;
@@ -1062,15 +1062,15 @@ bool SyntaxAnalyser::on_OASS()
 
     outOfBounds;
     if (tokenList.at(it).getType() != EQUAL)
-        throw error.syntaxError("Ошибка в операторе присваивания.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ.");
 
     if (!on_BF())
-        throw error.syntaxError("Ошибка в операторе присваивания.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ РѕРїРµСЂР°С‚РѕСЂРµ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ.");
 
     return true;
 }
 
-// [Формула] BF -> [Z] => BS
+// [Р¤РѕСЂРјСѓР»Р°] BF -> [Z] => BS
 bool SyntaxAnalyser::on_BF()
 {
     saveIt = it;
@@ -1078,12 +1078,12 @@ bool SyntaxAnalyser::on_BF()
         rollBack(saveIt);
 
     if (!on_BS())
-        throw error.syntaxError("Ошибка в формуле.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ С„РѕСЂРјСѓР»Рµ.");
 
     return true;
 }
 
-// [Слагаемое] BS -> BM => [(M | Z) => BS]
+// [РЎР»Р°РіР°РµРјРѕРµ] BS -> BM => [(M | Z) => BS]
 bool SyntaxAnalyser::on_BS()
 {
     if (!on_BM())
@@ -1101,12 +1101,12 @@ bool SyntaxAnalyser::on_BS()
     }
 
     if (!on_BS())
-        throw error.syntaxError("Ошибка в слагаемом.");
+        throw error.syntaxError("РћС€РёР±РєР° РІ СЃР»Р°РіР°РµРјРѕРј.");
 
     return true;
 }
 
-// [Множитель] BM -> I | N | EMAS | SQRT | "(" => BF => ")"
+// [РњРЅРѕР¶РёС‚РµР»СЊ] BM -> I | N | EMAS | SQRT | "(" => BF => ")"
 bool SyntaxAnalyser::on_BM()
 {
     saveIt = it;
@@ -1124,14 +1124,14 @@ bool SyntaxAnalyser::on_BM()
                     rollBack(saveIt);
                     outOfBounds;
                     if (tokenList.at(it).getType() != LBR)
-                        throw error.syntaxError("Ошибка в множителе.");
+                        throw error.syntaxError("РћС€РёР±РєР° РІ РјРЅРѕР¶РёС‚РµР»Рµ.");
 
                     if (!on_BF())
-                        throw error.syntaxError("Ошибка в множителе.");
+                        throw error.syntaxError("РћС€РёР±РєР° РІ РјРЅРѕР¶РёС‚РµР»Рµ.");
 
                     outOfBounds;
                     if (tokenList.at(it).getType() != RBR)
-                        throw error.syntaxError("Ошибка в множителе.");
+                        throw error.syntaxError("РћС€РёР±РєР° РІ РјРЅРѕР¶РёС‚РµР»Рµ.");
                 }
 
             }

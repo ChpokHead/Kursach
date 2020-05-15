@@ -1,4 +1,4 @@
-//Класс "Лексема"
+//РљР»Р°СЃСЃ "Р›РµРєСЃРµРјР°"
 #pragma once
 #include "Enums.h"
 #include <string>
@@ -7,8 +7,8 @@ using namespace std;
 
 class Token {
 private:
-    string _value; // Строковое значение
-    TokenType _type; //Тип лексемы
+    string _value; // РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ
+    TokenType _type; //РўРёРї Р»РµРєСЃРµРјС‹
 public:
     string getValue() { return this->_value; }
     TokenType getType() { return this->_type; }
