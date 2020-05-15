@@ -88,7 +88,6 @@ LexAnalyser::LexAnalyser(const char* fname) : isLast(false), isStrCon(false) // 
     M.insert(Item(Input(S4, '|'), Result(S6, O2)));
     M.insert(Item(Input(S4, '['), Result(S6, O2)));
     M.insert(Item(Input(S4, ']'), Result(S6, O2)));
-
     /*ññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññ*/
 
     /*ññññññññññññññññññññññññññññññ- —“–Œ Œ¬¿ﬂ  ŒÕ—“¿Õ“¿ -ñññññññññññññññññññññññññññññññññ*/
@@ -125,7 +124,6 @@ LexAnalyser::LexAnalyser(const char* fname) : isLast(false), isStrCon(false) // 
     M.insert(Item(Input(S1, '|'), Result(S1, O3)));
     M.insert(Item(Input(S1, '['), Result(S1, O3)));
     M.insert(Item(Input(S1, ']'), Result(S1, O3)));
-
     /*ññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññ*/
 
     /*ññññññññññññññññññññññññññññññ Œœ≈–¿“Œ–€ –¿«ƒ≈À»“≈À» ñññññññññññññññññññññññññññññññññ*/
@@ -149,7 +147,6 @@ LexAnalyser::LexAnalyser(const char* fname) : isLast(false), isStrCon(false) // 
     M.insert(Item(Input(S0, '|'), Result(S3, O32)));
     M.insert(Item(Input(S0, '['), Result(S3, O41)));
     M.insert(Item(Input(S0, ']'), Result(S3, O42)));
-
     /*ññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññ*/
 
     M.insert(Item(Input(S0, '\t'), Result(S0, O0))); // Tab ÔÓÒÎÂ Ó˜ÂÂ‰ÌÓÈ ÎÂÍÒÂÏ˚
@@ -179,7 +176,6 @@ LexAnalyser::LexAnalyser(const char* fname) : isLast(false), isStrCon(false) // 
     Keywords.insert({ "fmt.Println", Output(O38) });
     Keywords.insert({ "math.Sqrt", Output(O39) });
     Keywords.insert({ "main", Output(O40) });
-
     /*ññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññ*/
 }
 

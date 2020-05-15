@@ -8,7 +8,7 @@ using namespace std;
 class SyntaxAnalyser {
 private:
     int it, sizeList, saveIt;
-    vector<Token>* tokenList;
+    vector<Token>& tokenList;
     ErrorHandler error;
 
     void rollBack(int saveIt);
@@ -68,7 +68,7 @@ private:
     bool on_BF();    // [Формула] BF -> [Z] => BS
 
 public:
-    SyntaxAnalyser(vector<Token> *tokens);
+    SyntaxAnalyser(vector<Token> &tokens);
     ~SyntaxAnalyser() {};
     void analyse();
 };

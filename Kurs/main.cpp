@@ -14,7 +14,7 @@ int main (int argc, char* argv[])
 
         while (lex.getToken(token))
         {
-            cout << "Лексемма: '" << token.getValue() << "' --- "; 
+            cout << "Лексема: '" << token.getValue() << "' --- "; 
             token.printToken();
         }
 
