@@ -22,7 +22,7 @@ public:
     LexAnalyser(const char* fname); //Конструктор
     ~LexAnalyser(); //Деструктор
     bool getToken(Token& token); //Функция получения очередной лексемы
-    vector<Token>* getTokenList() { return &tokenList; };
+    vector<Token>& getTokenList() { return tokenList; };
 
 private:
     ifstream _file; //Файловый поток для чтения cимволов входной цепочки
