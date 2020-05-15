@@ -2,20 +2,20 @@
 
 #include<iostream>
 
-//Êëàññ-èñêëş÷åíèå îøèáêè ıòàïîâ êîìïèëÿöèè
+//ĞšĞ»Ğ°ÑÑ-Ğ¸ÑĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğµ Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸ ÑÑ‚Ğ°Ğ¿Ğ¾Ğ² ĞºĞ¾Ğ¼Ğ¿Ğ¸Ğ»ÑÑ†Ğ¸Ğ¸
 class ErrorHandler
 {
 public:
     ErrorHandler() {};
     inline string lexError(std::string str)
     {
-        std::cout << "\nÎØÈÁÊÀ ËÅÊÑÈ×ÅÑÊÎÃÎ ÀÍÀËÈÇÀÒÎĞÀ: ";
+        std::cout << "\nĞĞ¨Ğ˜Ğ‘ĞšĞ Ğ›Ğ•ĞšĞ¡Ğ˜Ğ§Ğ•Ğ¡ĞšĞĞ“Ğ ĞĞĞĞ›Ğ˜Ğ—ĞĞ¢ĞĞ Ğ: ";
         return str;
     }
 
     inline string syntaxError(std::string str)
     {
-        std::cout << "\nÎØÈÁÊÀ ÑÈÍÒÀÊÑÈ×ÅÑÊÎÃÎ ÀÍÀËÈÇÀÒÎĞÀ. ";
+        std::cout << "\nĞĞ¨Ğ˜Ğ‘ĞšĞ Ğ¡Ğ˜ĞĞ¢ĞĞšĞ¡Ğ˜Ğ§Ğ•Ğ¡ĞšĞĞ“Ğ ĞĞĞĞ›Ğ˜Ğ—ĞĞ¢ĞĞ Ğ. ";
         return str;
     }
 
