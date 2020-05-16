@@ -23,5 +23,11 @@ public:
     {
         return str;
     }
+
+    inline string semanticError(std::string str)
+    {
+        std::cout << "\nÎØÈÁÊÀ ÑÅÌÀÍÒÈ×ÅÑÊÎÃÎ ÀÍÀËÈÇÀ. ";
+        return str;
+    }
 };
 
