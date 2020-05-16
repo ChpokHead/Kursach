@@ -8,33 +8,33 @@ using namespace std;
 class IDTable
 {
 private:
-	bool findFuncID(string str); // Поиск идент. функции
-	bool findVarID(string str); // Поиск идент. переменной
+    bool findFuncID(string str); // РџРѕРёСЃРє РёРґРµРЅС‚. С„СѓРЅРєС†РёРё
+    bool findVarID(string str); // РџРѕРёСЃРє РёРґРµРЅС‚. РїРµСЂРµРјРµРЅРЅРѕР№
 
-	struct var
-	{
-		string name;
-		bool init;
-	};
+    struct var
+    {
+        string name;
+        bool init;
+    };
 
-	vector<string> funcIDList;
-	vector<var> varIDList;
+    vector<string> funcIDList;
+    vector<var> varIDList;
 
 public:
-	IDTable() {};
-	~IDTable() {};
+    IDTable() {};
+    ~IDTable() {};
 
-	// Добавление индент. функции в таблицу, если имя добавляемоего элемента 
-	// есть в таблице, то возвращает false
-	bool pushFuncID(string str); 
+    // Р”РѕР±Р°РІР»РµРЅРёРµ РёРЅРґРµРЅС‚. С„СѓРЅРєС†РёРё РІ С‚Р°Р±Р»РёС†Сѓ, РµСЃР»Рё РёРјСЏ РґРѕР±Р°РІР»СЏРµРјРѕРµРіРѕ СЌР»РµРјРµРЅС‚Р°
+    // РµСЃС‚СЊ РІ С‚Р°Р±Р»РёС†Рµ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ false
+    bool pushFuncID(string str);
 
-	// Добавление индент. функции в таблицу, если имя добавляемоего элемента 
-	// есть в таблице, то возвращает false
-	bool pushVarID(string _name, bool _init);
+    // Р”РѕР±Р°РІР»РµРЅРёРµ РёРЅРґРµРЅС‚. С„СѓРЅРєС†РёРё РІ С‚Р°Р±Р»РёС†Сѓ, РµСЃР»Рё РёРјСЏ РґРѕР±Р°РІР»СЏРµРјРѕРµРіРѕ СЌР»РµРјРµРЅС‚Р°
+    // РµСЃС‚СЊ РІ С‚Р°Р±Р»РёС†Рµ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ false
+    bool pushVarID(string _name, bool _init);
 
-	// Проверка переменной на ее инициализацию
-	bool checkInitVarID(string str); 
+    // РџСЂРѕРІРµСЂРєР° РїРµСЂРµРјРµРЅРЅРѕР№ РЅР° РµРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ
+    bool checkInitVarID(string str);
 
-	// Сеттер, добавляет поле инициализ. по идентификатору
-	bool setInitVarID(string str);
+    // РЎРµС‚С‚РµСЂ, РґРѕР±Р°РІР»СЏРµС‚ РїРѕР»Рµ РёРЅРёС†РёР°Р»РёР·. РїРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
+    bool setInitVarID(string str);
 };
