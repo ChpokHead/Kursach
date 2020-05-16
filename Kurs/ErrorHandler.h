@@ -26,7 +26,7 @@ public:
 
     inline string semanticError(std::string str)
     {
-        std::cout << "\nÎØÈÁÊÀ ÑÅÌÀÍÒÈ×ÅÑÊÎÃÎ ÀÍÀËÈÇÀ. ";
+        std::cout << "\nĞĞ¨Ğ˜Ğ‘ĞšĞ Ğ¡Ğ•ĞœĞĞĞ¢Ğ˜Ğ§Ğ•Ğ¡ĞšĞĞ“Ğ ĞĞĞĞ›Ğ˜Ğ—Ğ. ";
         return str;
     }
 };
