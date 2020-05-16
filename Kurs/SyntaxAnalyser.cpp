@@ -721,7 +721,7 @@ int SyntaxAnalyser::on_O()
         }
     }
 
-    if (tokenList.at(static_cast<__int64>(it) + 1).getType() != RFBR)
+    if (tokenList.at(static_cast<__int64_t>(it) + 1).getType() != RFBR)
         if (!on_NL())
             return 2;
 
