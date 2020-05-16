@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IDTable.cpp" />
     <ClCompile Include="LexAnalyser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SyntaxAnalyser.cpp" />
@@ -132,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="Enums.h" />
     <ClInclude Include="ErrorHandler.h" />
+    <ClInclude Include="IDTable.h" />
     <ClInclude Include="LexAnalyser.h" />
     <ClInclude Include="SyntaxAnalyser.h" />
     <ClInclude Include="Token.h" />
