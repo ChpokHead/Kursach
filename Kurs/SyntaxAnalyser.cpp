@@ -873,8 +873,7 @@ bool SyntaxAnalyser::on_SQRT()
 //////////////////////// Объявление переменных //////////////////////////////
 
 // V -> "var" => I => T | [T => "=" => [Z] = > N] | ({"," => I} => T)
-bool SyntaxAnalyser::on_V()
-{
+bool SyntaxAnalyser::on_V() {
     outOfBounds;
     if (tokenList.at(it).getType() != VAR)
         return false;
@@ -886,10 +885,11 @@ bool SyntaxAnalyser::on_V()
     saveIt = it;
     if (!on_T() && tokenList.at(it).getType() != LSQBR && tokenList.at(it).getType() != COMMA)
         throw error.syntaxError("Ошибка в объявлении переменной.");
-    else if (tokenList.at(it).getType() == LSQBR)
+    else if (tokenList.at(it).getType() == LSQBR){
+        rollBack(saveIt);
         return false;
-    rollBack(saveIt); // it возвращается на прежнюю позицию после проверки
-
+     // it возвращается на прежнюю позицию после проверки
+    }
     if(!on_T())
     {
         rollBack(saveIt);

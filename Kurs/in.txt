@@ -10,7 +10,7 @@ func main() {
 	var b float64 = 5
 	var e float64 = -3
 	var cdt, x1, x2 float64
-	
+	var a [i]int
 	cdt = b * b - 4 * a * e
 	
 	x1 = (-b + math.Sqrt(cdt)) / (2 * a)
