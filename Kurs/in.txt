@@ -6,10 +6,7 @@ import (
 )
 
 func main() {
-	var a float64 = 2 
-	var b float64 = 5
-	var e float64 = -3
-	var cdt, x1, x2 float64
+	var a[5] int
 	
 	cdt = b * b - 4 * a * e
 	

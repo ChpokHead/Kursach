@@ -243,6 +243,9 @@ bool SyntaxAnalyser::on_FUN()
     else if(tokenList.at(it).getType() == MAIN)
         return false;
 
+    // Запоминаем имя функции
+    string ID = tokenList.at(it).getValue();
+
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
         throw error.syntaxError("Ошибка в объявлении функции.");
@@ -296,6 +299,9 @@ bool SyntaxAnalyser::on_FUN()
     outOfBounds;
     if (tokenList.at(it).getType() != RFBR)
         throw error.syntaxError("Ошибка в теле функции.");
+
+    if (!idTable.pushFuncID(ID))
+        throw error.syntaxError("Повторное использование имени функции.");
 
     return true;
 }
@@ -715,7 +721,7 @@ int SyntaxAnalyser::on_O()
         }
     }
 
-    if (tokenList.at(it + 1).getType() != RFBR)
+    if (tokenList.at(static_cast<__int64>(it) + 1).getType() != RFBR)
         if (!on_NL())
             return 2;
 
@@ -882,14 +888,21 @@ bool SyntaxAnalyser::on_V()
     if (!on_I())
         throw error.syntaxError("Ошибка в объявлении переменной.");
 
+    // Запоминание имени переменной для добавления в таблицу
+    string ID = tokenList.at(it).getValue();
+
     // Проверка на пересечение с объявлением массива: если это оказалось объявление массива, то return false
-    saveIt = it;
     if (!on_T() && tokenList.at(it).getType() != LSQBR && tokenList.at(it).getType() != COMMA)
         throw error.syntaxError("Ошибка в объявлении переменной.");
     else if (tokenList.at(it).getType() == LSQBR)
         return false;
-    rollBack(saveIt); // it возвращается на прежнюю позицию после проверки
+    it--; // it возвращается на прежнюю позицию после проверки
 
+    // Добавление имени переменной в таблицу
+    if (!idTable.pushVarID(ID, false))
+        throw error.semanticError("Повторное использование имени переменной.");
+
+    saveIt = it;
     if(!on_T())
     {
         rollBack(saveIt);
@@ -903,8 +916,13 @@ bool SyntaxAnalyser::on_V()
             throw error.syntaxError("Ошибка в объявлении переменной.");
         }
 
+        ID = tokenList.at(it).getValue();
+        if (!idTable.pushVarID(ID, false))
+            throw error.semanticError("Повторное использование имени переменной.");
+
         while(1)
         {
+
             saveIt = it;
             outOfBounds;
             if(tokenList.at(it).getType() != COMMA)
@@ -917,11 +935,17 @@ bool SyntaxAnalyser::on_V()
                 rollBack(saveIt);
                 break;
             }
+           
+            ID = tokenList.at(it).getValue();
+            if (!idTable.pushVarID(ID, false))
+                throw error.semanticError("Повторное использование имени переменной.");
         }
         if(!on_T())
         {
             throw error.syntaxError("Ошибка в объявлении переменной.");
         }
+       
+        return true;
     }
     else
     {
@@ -930,6 +954,7 @@ bool SyntaxAnalyser::on_V()
         if(tokenList.at(it).getType() != EQUAL)
         {
             rollBack(saveIt);
+
             return true;
         }
         saveIt = it;
@@ -938,9 +963,9 @@ bool SyntaxAnalyser::on_V()
         if(!on_N())
             throw error.syntaxError("Ошибка в объявлении переменной.");
 
+        idTable.setInitVarID(ID);
+        return true;
     }
-
-    return true;
 }
 
 // [Массив] MAS -> "var" => I => "[" => N => "]" => T
@@ -952,6 +977,8 @@ bool SyntaxAnalyser::on_MAS()
 
     if (!on_I())
         throw error.syntaxError("Ошибка в объявлении массива.");
+
+    string ID = tokenList.at(it).getValue();
 
     outOfBounds;
     if (tokenList.at(it).getType() != LSQBR )
@@ -967,6 +994,8 @@ bool SyntaxAnalyser::on_MAS()
     if (!on_T())
         throw error.syntaxError("Ошибка в объявлении массива.");
 
+    if (!idTable.pushVarID(ID, false))
+        throw error.semanticError("Повторное использование имени переменной.");
     return true;
 }
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Token.h"
 #include "ErrorHandler.h"
+#include "IDTable.h"
 
 using namespace std;
 
@@ -10,6 +11,7 @@ private:
     int it, sizeList, saveIt;
     vector<Token>& tokenList;
     ErrorHandler error;
+    IDTable idTable;
 
     void rollBack(int saveIt);
     void optimization();
