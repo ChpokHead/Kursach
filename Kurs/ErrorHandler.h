@@ -29,5 +29,11 @@ public:
         std::cout << "\nОШИБКА СЕМАНТИЧЕСКОГО АНАЛИЗА. ";
         return str;
     }
+
+    inline string semanticError(std::string str, std::string id)
+    {
+        std::cout << "\nОШИБКА СЕМАНТИЧЕСКОГО АНАЛИЗА. ";
+        return str + id;
+    }
 };
 

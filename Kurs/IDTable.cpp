@@ -2,72 +2,42 @@
 
 bool IDTable::pushFuncID(string str)
 {
-	if (findFuncID(str))
-		return false;
+    if (findFuncID(str))
+        return false;
 
-	funcIDList.push_back(str);
-	return true;
+    funcIDList.push_back(str);
+    return true;
 }
 
 bool IDTable::findFuncID(string str)
 {
-	for (int i = 0; i < funcIDList.size(); i++)
-	{
-		if (str == funcIDList[i])
-			return true;
-	}
+    for (int i = 0; i < funcIDList.size(); i++)
+    {
+        if (str == funcIDList[i])
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 /////////////////////////////////////////////////////////
 
-bool IDTable::pushVarID(string _name, bool _init)
+bool IDTable::pushVarID(string str)
 {
-	if (findVarID(_name))
-		return false;
+    if (findVarID(str))
+        return false;
 
-	var v;
-	v.name = _name;
-	v.init = _init;
-	varIDList.push_back(v);
-	return true;
+    varIDList.push_back(str);
+    return true;
 }
 
 bool IDTable::findVarID(string str)
 {
-	for (int i = 0; i < varIDList.size(); i++) 
-	{
-		if (str == varIDList[i].name)
-			return true;
-	}
+    for (int i = 0; i < varIDList.size(); i++)
+    {
+        if (str == varIDList[i])
+            return true;
+    }
 
-	return false;
-}
-
-bool IDTable::checkInitVarID(string str)
-{
-	for (int i = 0; i < varIDList.size(); i++)
-	{
-		if (str == varIDList[i].name && varIDList[i].init)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool IDTable::setInitVarID(string str)
-{
-	for (int i = 0; i < varIDList.size(); i++)
-	{
-		if (str == varIDList[i].name)
-		{
-			varIDList[i].init = true;
-			return true;
-		}
-	}
-
-	return false;
+    return false;
 }

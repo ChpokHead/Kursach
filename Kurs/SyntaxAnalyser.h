@@ -3,6 +3,7 @@
 #include "Token.h"
 #include "ErrorHandler.h"
 #include "IDTable.h"
+#include "Tree.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ private:
     vector<Token>& tokenList;
     ErrorHandler error;
     IDTable idTable;
+    Tree tokenTree;
 
     void rollBack(int saveIt);
     void optimization();

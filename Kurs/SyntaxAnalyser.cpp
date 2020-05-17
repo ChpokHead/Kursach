@@ -84,6 +84,7 @@ void SyntaxAnalyser::optimization()
 
 // Главный метод, с которого начинается синтаксический анализ
 void SyntaxAnalyser::analyse() {
+
     if (on_P()) {
         cout << endl << "-----------------------------------------";
         cout << "\nСИНТАКСИЧЕЙСКИЙ АНАЛИЗ ПРОЙДЕН УСПЕШНО! |" << endl;
@@ -95,6 +96,7 @@ void SyntaxAnalyser::analyse() {
 
 // P -> PAC -> IMP -> MB
 bool SyntaxAnalyser::on_P() {
+    Node* pacNode, impNode, mbNode;
     if (!on_PAC()) // OK
         throw error.syntaxError("Ошибка в объявлении package.");
 
@@ -233,7 +235,6 @@ bool SyntaxAnalyser::on_MAIN()
 // [Функция] FUN -> "func" => I => "(" => [I => T => {"," => I => T}] =>")" => T => "{" => [BO] => "}"
 bool SyntaxAnalyser::on_FUN()
 {
-    int res;
     outOfBounds;
     if (tokenList.at(it).getType() != FUNC)
         return false;
@@ -245,6 +246,9 @@ bool SyntaxAnalyser::on_FUN()
 
     // Запоминаем имя функции
     string ID = tokenList.at(it).getValue();
+    // Добавляем имя функции в таблицу идентификаторов
+    if (!idTable.pushFuncID(ID))
+        throw error.semanticError("Повторное использование имени функции: ", ID);
 
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
@@ -252,18 +256,25 @@ bool SyntaxAnalyser::on_FUN()
 
     saveIt = it;
     if (on_I()) {
+        ID = tokenList.at(it).getValue();
+        if (!idTable.pushVarID(ID))
+            throw error.semanticError("Повторное использование имени переменной: ", ID);
 
         saveIt = it;
         if (!on_T())
             throw error.syntaxError("Ошибка в объявлении функции.");
 
-        saveIt = it;
         while (1)
         {
+            saveIt = it;
             outOfBounds;
             if (tokenList.at(it).getType() == COMMA) {
                 if (!on_I())
                     throw error.syntaxError("Ошибка в объявлении функции.");
+
+                ID = tokenList.at(it).getValue();
+                if (!idTable.pushVarID(ID))
+                    throw error.semanticError("Переменная не объявлена: ", ID);
 
                 if (!on_T())
                     throw error.syntaxError("Ошибка в объявлении функции.");
@@ -290,7 +301,7 @@ bool SyntaxAnalyser::on_FUN()
         throw error.syntaxError("Ошибка в объявлении функции.");
 
     saveIt = it;
-    res = on_BO();
+    int res = on_BO();
     if (res == 0)
         rollBack(saveIt);
     else if(res == 2)
@@ -300,9 +311,8 @@ bool SyntaxAnalyser::on_FUN()
     if (tokenList.at(it).getType() != RFBR)
         throw error.syntaxError("Ошибка в теле функции.");
 
-    if (!idTable.pushFuncID(ID))
-        throw error.syntaxError("Повторное использование имени функции.");
-
+    // Очищаем вектор имен переменных, т.к. выходим из функции
+    idTable.clearVarId();
     return true;
 }
 
@@ -739,6 +749,8 @@ bool SyntaxAnalyser::on_CFUN()
     if (!on_I())
         return false;
 
+    string ID = tokenList.at(it).getValue();
+
     outOfBounds;
     if (tokenList.at(it).getType() != LBR)
         return false;
@@ -750,6 +762,9 @@ bool SyntaxAnalyser::on_CFUN()
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
         throw error.syntaxError("Ошибка при вызове функции.");
+
+    if (!idTable.findFuncID(ID))
+        throw error.semanticError("Функция не объявлена: ", ID);
 
     return true;
 }
@@ -866,6 +881,12 @@ bool SyntaxAnalyser::on_SQRT()
         if (!on_N())
             throw error.syntaxError("Ошибка в функции math.Sqrt.");
     }
+    else
+    {
+        string ID = tokenList.at(it).getValue();
+        if (!idTable.findVarID(ID))
+            throw error.semanticError("Переменная не объявлена: ", ID);
+    }
 
     outOfBounds;
     if (tokenList.at(it).getType() != RBR)
@@ -899,7 +920,7 @@ bool SyntaxAnalyser::on_V()
     it--; // it возвращается на прежнюю позицию после проверки
 
     // Добавление имени переменной в таблицу
-    if (!idTable.pushVarID(ID, false))
+    if (!idTable.pushVarID(ID))
         throw error.semanticError("Повторное использование имени переменной.");
 
     saveIt = it;
@@ -917,7 +938,7 @@ bool SyntaxAnalyser::on_V()
         }
 
         ID = tokenList.at(it).getValue();
-        if (!idTable.pushVarID(ID, false))
+        if (!idTable.pushVarID(ID))
             throw error.semanticError("Повторное использование имени переменной.");
 
         while(1)
@@ -937,7 +958,7 @@ bool SyntaxAnalyser::on_V()
             }
 
             ID = tokenList.at(it).getValue();
-            if (!idTable.pushVarID(ID, false))
+            if (!idTable.pushVarID(ID))
                 throw error.semanticError("Повторное использование имени переменной.");
         }
         if(!on_T())
@@ -963,7 +984,6 @@ bool SyntaxAnalyser::on_V()
         if(!on_N())
             throw error.syntaxError("Ошибка в объявлении переменной.");
 
-        idTable.setInitVarID(ID);
         return true;
     }
 }
@@ -994,7 +1014,7 @@ bool SyntaxAnalyser::on_MAS()
     if (!on_T())
         throw error.syntaxError("Ошибка в объявлении массива.");
 
-    if (!idTable.pushVarID(ID, false))
+    if (!idTable.pushVarID(ID))
         throw error.semanticError("Повторное использование имени переменной.");
     return true;
 }
@@ -1064,6 +1084,8 @@ bool SyntaxAnalyser::on_EMAS()
     if (!on_I())
         return false;
 
+    string ID = tokenList.at(it).getValue();
+
     outOfBounds;
     if (tokenList.at(it).getType() != LSQBR)
         return false;
@@ -1074,6 +1096,9 @@ bool SyntaxAnalyser::on_EMAS()
     outOfBounds;
     if (tokenList.at(it).getType() != RSQBR)
         throw error.syntaxError("Ошибка обращения к элементу массива.");
+
+    if (!idTable.findVarID(ID))
+        throw error.semanticError("Массив не объявлен: ", ID);
 
     return true;
 }
@@ -1087,6 +1112,13 @@ bool SyntaxAnalyser::on_OASS()
         rollBack(saveIt);
         if (!on_I())
             return false;
+        else
+        {
+            string ID = tokenList.at(it).getValue();
+
+            if (!idTable.findVarID(ID))
+                throw error.semanticError("Переменная не объявлена: ", ID);
+        }
     }
 
     outOfBounds;
@@ -1163,6 +1195,12 @@ bool SyntaxAnalyser::on_BM()
                         throw error.syntaxError("Ошибка в множителе.");
                 }
 
+            }
+            else
+            {
+                string ID = tokenList.at(it).getValue();
+                if (!idTable.findVarID(ID))
+                    throw error.semanticError("Переменная не объявлена: ", ID);
             }
         }
     }
