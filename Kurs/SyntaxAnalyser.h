@@ -46,10 +46,10 @@ private:
     bool on_V();     // V -> "var" => I => T => ["=" => N] | {"," => I}
     bool on_MAS();   // [Массив] MAS -> "var" => I => "[" => N => "]" => T
 
-    bool on_P();     // [Главное правило] P => PAC => IMP => MB
-    bool on_PAC();   // [package main] on_Pac => "package" -> I => NL
-    bool on_IMP();   // [import] IMP -> "(" => STR | NL => ")" => NL
-    bool on_MB();    // [Тело программы] MB -> {FUN} => MAIN => {FUN}
+    bool on_P(Node *&root);     // [Главное правило] P => PAC => IMP => MB
+    bool on_PAC(Node *&root);   // [package main] on_Pac => "package" -> I => NL
+    bool on_IMP(Node *&root);   // [import] IMP -> "(" => STR | NL => ")" => NL
+    bool on_MB(Node *&root);    // [Тело программы] MB -> {FUN} => MAIN => {FUN}
 
     bool on_CFUN();  // [Вызов функции] CFUN -> I => "(" => [PF] => ")"
     bool on_PF();    // [Параметры вызова функции] PF -> BF => {"," => BF}

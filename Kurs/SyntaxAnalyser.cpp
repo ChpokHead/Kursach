@@ -85,7 +85,7 @@ void SyntaxAnalyser::optimization()
 // Главный метод, с которого начинается синтаксический анализ
 void SyntaxAnalyser::analyse() {
 
-    if (on_P()) {
+    if (on_P(tokenTree.root)) {
         cout << endl << "-----------------------------------------";
         cout << "\nСИНТАКСИЧЕЙСКИЙ АНАЛИЗ ПРОЙДЕН УСПЕШНО! |" << endl;
         cout << "-----------------------------------------" << endl;
@@ -95,15 +95,15 @@ void SyntaxAnalyser::analyse() {
 }
 
 // P -> PAC -> IMP -> MB
-bool SyntaxAnalyser::on_P() {
-    Node* pacNode, impNode, mbNode;
-    if (!on_PAC()) // OK
+bool SyntaxAnalyser::on_P(Node *&root) {
+    Node *pacNode, *impNode, *mbNode;
+    if (!on_PAC(pacNode)) // OK
         throw error.syntaxError("Ошибка в объявлении package.");
 
-    if (!on_IMP()) // OK
+    if (!on_IMP(impNode)) // OK
         throw error.syntaxError("Ошибка в объявлении import.");
 
-    if(!on_MB())
+    if(!on_MB(mbNode))
         throw error.syntaxError("Ошибка в теле программы.");
 
     return true;
@@ -111,7 +111,7 @@ bool SyntaxAnalyser::on_P() {
 
 
 // PAC => "package" => I => NL
-bool SyntaxAnalyser::on_PAC() {
+bool SyntaxAnalyser::on_PAC(Node *&root) {
     if (tokenList.at(it).getType() != PACKAGE)
         return false;
 
@@ -126,7 +126,7 @@ bool SyntaxAnalyser::on_PAC() {
 }
 
 // IMP -> "import" => [NL] => "(" => [STR => {NL => STR}] => ")" => NL
-bool SyntaxAnalyser::on_IMP() {
+bool SyntaxAnalyser::on_IMP(Node *&root) {
     outOfBounds;
     if (tokenList.at(it).getType() != IMPORT)
         return false;
@@ -168,7 +168,7 @@ bool SyntaxAnalyser::on_IMP() {
 
 
 // [Тело программы] MB -> {FUN => NL} =>  MAIN => [NL]
-bool SyntaxAnalyser::on_MB()
+bool SyntaxAnalyser::on_MB(Node *&root)
 {
     while (1)
     {
